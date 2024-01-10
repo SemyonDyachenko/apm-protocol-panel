@@ -1,0 +1,110 @@
+@import "react-perfect-scrollbar/dist/css/styles.css";
+@import "react-phone-number-input/style.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: "DM Sans", sans-serif;
+  font-family: "Montserrat", sans-serif;
+}
+
+.dark {
+  --tw-bg-opacity: 1;
+  background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+  color: white;
+}
+
+.link-disabled {
+  pointer-events: none;
+}
+
+.light {
+  --tw-bg-opacity: 1;
+  background-color: #ffffff;
+  color: rgb(55 65 81 / var(--tw-bg-opacity));
+}
+
+details[open] :not(summary) {
+  animation: slide 0.3s ease-in-out;
+}
+
+@keyframes slide {
+  0% {
+    opacity: 0;
+    transform: translate(0, -10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
+footer a:hover {
+  color: #ffcd58;
+}
+
+input[type="checkbox"] {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.checkbox {
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  background: #fff;
+  border: 2px #ddd solid;
+  margin-right: 4px;
+  border-radius: 4px;
+}
+
+.checkbox--active {
+  border-color: #ffcd58;
+  background: #ffc132;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  border-radius: 100px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 100px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  --tw-text-opacity: 1;
+  background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+  border-radius: 100px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+  border-radius: 100px;
+}
+
+/* --- VK ----- */
+.VkIdWebSdk__button_reset {
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  overflow: visible;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: normal;
+  -webkit-font-smoothing: inherit;
+  -moz-osx-font-smoothing: inherit;
+  -webkit-appearance: none;
+}
