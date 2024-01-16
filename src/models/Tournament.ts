@@ -30,6 +30,7 @@ export interface TournamentRegistration {
   weight_class: WeightClass
   registration_date: string
   category: string
+  confirm: boolean
 }
 
 export const getTournamentLevel = (tournament: Tournament) => {

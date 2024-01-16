@@ -13,7 +13,6 @@ import { Link } from "react-router-dom"
 type Props = {
   className?: string
   items: Array<SidebarItem>
-  changeState: (target: string) => void
 }
 
 export type SidebarItem = {
@@ -22,9 +21,10 @@ export type SidebarItem = {
   icon: IconDefinition
   selected?: boolean
   disabled?: boolean
+  link: string
 }
 
-const SidebarMenu = ({ className, items, changeState }: Props) => {
+const SidebarMenu = ({ className, items }: Props) => {
   const [selected, setSelected] = useState(0)
 
   useEffect(() => {
@@ -34,7 +34,9 @@ const SidebarMenu = ({ className, items, changeState }: Props) => {
   }, [selected])
 
   return (
-    <div className={`left-0 top-0 ${className} h-screen bg-white shadow-md`}>
+    <div
+      className={`left-0 top-0 ${className} h-screen bg-white shadow-md md:w-[15%]`}
+    >
       <div className="flex w-full justify-center py-5">
         <img
           className="max-w-[150px]"
@@ -45,21 +47,23 @@ const SidebarMenu = ({ className, items, changeState }: Props) => {
       <div className="mt-16">
         <div className="flex flex-col gap-y-2  font-medium text-gray-400">
           {items.map((item, index) => (
-            <div
-              onClick={() => {
-                if (!item.disabled) setSelected(index)
-              }}
-              key={index}
-              className={`flex cursor-pointer items-center gap-4 px-8 py-4 transition hover:bg-gray-70 ${
-                selected === index &&
-                " border-r-4 border-secondary-500 text-secondary-500"
-              }`}
-            >
-              <div>
-                <FontAwesomeIcon className="text-lg" icon={item.icon} />
+            <Link to={`${item.link}`} key={index}>
+              <div
+                onClick={() => {
+                  if (!item.disabled) setSelected(index)
+                }}
+                key={index}
+                className={`flex cursor-pointer items-center gap-4 px-8 py-4 transition hover:bg-gray-70 ${
+                  window.location.pathname === item.link &&
+                  " border-r-4 border-secondary-500 text-secondary-500"
+                }`}
+              >
+                <div className="w-1/12">
+                  <FontAwesomeIcon className="text-lg" icon={item.icon} />
+                </div>
+                <div>{item.title}</div>
               </div>
-              <div>{item.title}</div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

@@ -63,6 +63,36 @@ export const registerForTournament =
     }
   }
 
+export const confirmTournamentRegistration =
+  (id: number) => async (dispatch: AppDispatch) => {
+    try {
+      const response = await axios.put(
+        `${SERVER_URL}/tournament_registration_confirm/${id}/`,
+        { id }
+      )
+      return response
+    } catch (e: AxiosError | any) {
+      console.log(e.message)
+    }
+  }
+
+export const deleteTournamentRegistration =
+  (id: number) => async (dispatch: AppDispatch) => {
+    try {
+      const response = await axios.delete(
+        `${SERVER_URL}/tournament_registration_delete/${id}/`,
+        {
+          params: {
+            id,
+          },
+        }
+      )
+      return response
+    } catch (e: AxiosError | any) {
+      console.log(e.message)
+    }
+  }
+
 export const tournamentActive =
   (tournamentId: number) => async (dispatch: AppDispatch) => {
     try {

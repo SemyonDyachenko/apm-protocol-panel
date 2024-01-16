@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react"
 import {
   faBell,
+  faDisplay,
+  faFile,
   faGear,
   faHome,
   faSearch,
@@ -11,7 +13,7 @@ import CompetitorsSection from "../competitors"
 import UpBar from "@/components/upBar"
 import SidebarMenu, { SidebarItem } from "@/components/sidebar"
 import { useAppDispatch, useAppSelector } from "@/hooks/redux"
-import { useNavigate } from "react-router-dom"
+import { Outlet, useNavigate } from "react-router-dom"
 import { logoutUser, refreshLogin } from "@/store/actions/authAction"
 import { getCompetitorData } from "@/store/actions/competitorAction"
 import TournamentsPage from "../tournaments"
@@ -21,85 +23,87 @@ type Props = {}
 const MainPage = (props: Props) => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const { competitor, loading } = useAppSelector((state) => state.competitors)
 
   useEffect(() => {
-    if (!localStorage.getItem("token")) {
+    if (!localStorage.getItem("apm_protocols_token")) {
       navigate("/auth")
     } else {
       try {
         dispatch(refreshLogin()).then(() => {
-          dispatch(getCompetitorData(localStorage.getItem("token"))).then(
-            (value) => {
-              if (!value) {
-                dispatch(logoutUser())
-                navigate("/auth")
-              }
+          dispatch(
+            getCompetitorData(localStorage.getItem("apm_protocols_token"))
+          ).then((value) => {
+            if (!value) {
+              dispatch(logoutUser())
+              navigate("/auth")
             }
-          )
+          })
         })
       } catch (err) {
         console.log(err)
       }
     }
   }, [])
-
-  const [targetWindow, setTargetWindow] = useState("tournaments")
   const [targetTitle, setTargetTitle] = useState("Турниры")
 
   let items: Array<SidebarItem> = [
     {
       title: "Турниры",
       onClick: () => {
-        setTargetWindow("tournaments")
         setTargetTitle("Турниры")
       },
       icon: faHome,
       selected: true,
+      link: "/",
     },
     {
       title: "Спортсмены",
       onClick: () => {
-        setTargetWindow("competitors")
         setTargetTitle("Спортсмены")
       },
       icon: faUser,
       selected: false,
+      link: "/competitors",
+    },
+    {
+      title: "Трансляция",
+      onClick: () => {
+        setTargetTitle("Спортсмены")
+      },
+      icon: faDisplay,
+      selected: false,
+      link: "/competitors",
+    },
+    {
+      title: "Отчеты",
+      onClick: () => {
+        setTargetTitle("Спортсмены")
+      },
+      icon: faFile,
+      selected: false,
+      link: "/competitors",
     },
     {
       title: "Настройки",
       onClick: () => {
-        setTargetWindow("settings")
         setTargetTitle("Настройки")
       },
       icon: faGear,
       selected: false,
+      link: "/settings",
     },
   ]
 
-  const getTargetWindow = () => {
-    switch (targetWindow) {
-      case "tournaments":
-        return <TournamentsPage />
-      case "competitors":
-        return <CompetitorsSection />
-      case "settings":
-        return <div>settings</div>
-    }
-  }
-
   return (
-    <div className="h-screen w-screen bg-slate-200">
-      <div className="flex">
-        <SidebarMenu
-          items={items}
-          changeState={setTargetWindow}
-          className="md:w-[15%]"
-        />
-        <div className="md:w-[85%]">
+    <div className="max-w-screen min-h-screen  bg-slate-200">
+      <div className="flex w-full">
+        <SidebarMenu items={items} className="fixed" />
+        <div className="ml-[15%] md:w-[85%]">
           <UpBar title={targetTitle} />
-          <div>
-            <div className="m-10">{getTargetWindow()}</div>
+          <div className="mt-[100px] w-full">
+            <div className="w-full p-10">
+              <Outlet />
+            </div>
           </div>
         </div>
       </div>

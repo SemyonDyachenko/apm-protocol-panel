@@ -37,8 +37,8 @@ export const loginUser =
         email,
         password,
       })
-      localStorage.setItem("token", response.data.access)
-      localStorage.setItem("refresh", response.data.refresh)
+      localStorage.setItem("apm_protocols_token", response.data.access)
+      localStorage.setItem("apm_protocols_refresh", response.data.refresh)
       dispatch(authSlice.actions.setAuth(true))
       dispatch(authSlice.actions.setAuthSuccess(response.data))
       return response
@@ -50,15 +50,15 @@ export const loginUser =
 
 export const refreshLogin = () => async (dispatch: AppDispatch) => {
   try {
-    if (localStorage.getItem("refresh") !== null) {
+    if (localStorage.getItem("apm_protocols_refresh") !== null) {
       const response = await axios.post<RefreshData>(
         `${SERVER_URL}/token/refresh/`,
         {
-          refresh: localStorage.getItem("refresh"),
+          refresh: localStorage.getItem("apm_protocols_refresh"),
         }
       )
 
-      localStorage.setItem("token", response.data.access)
+      localStorage.setItem("apm_protocols_token", response.data.access)
       dispatch(authSlice.actions.refreshTeken(response.data.access))
       dispatch(authSlice.actions.setAuth(true))
     }
@@ -74,8 +74,8 @@ export const logoutUser = () => async (dispatch: AppDispatch) => {
     dispatch(rolesSlice.actions.setRole(null))
 
     setAuth(false)
-    localStorage.removeItem("token")
-    localStorage.removeItem("refresh")
+    localStorage.removeItem("apm_protocols_token")
+    localStorage.removeItem("apm_protocols_refresh")
   } catch (error: Error | any) {
     console.log(error.message)
     return error.request.status

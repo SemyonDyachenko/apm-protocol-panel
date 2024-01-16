@@ -1,107 +1,169 @@
 import ActionButton from "@/components/UI/ActionButton"
 import Checkbox from "@/components/UI/Checkbox"
-import { getCompetitorFullname } from "@/models/Competitor"
+import Competitor, { getCompetitorFullname } from "@/models/Competitor"
 import { competitorAPI } from "@/services/competitorService"
 import { getRoleString } from "@/utils/string"
 import {
   faAdd,
   faEllipsisVertical,
   faUserEdit,
+  faUserPlus,
 } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useState } from "react"
+import CompetitorNode from "./competitorNode"
+import { motion } from "framer-motion"
+import Tournament, { TournamentRegistration } from "@/models/Tournament"
+import { tournamentAPI } from "@/services/tournamentsService"
+import {
+  confirmTournamentRegistration,
+  deleteTournamentRegistration,
+} from "@/store/actions/tournamentAction"
+import { useAppDispatch } from "@/hooks/redux"
+import CompetitorEditor from "@/components/competitorEditor"
 
-type Props = {}
+type Props = {
+  tournament: Tournament
+  action: () => void
+}
 
-const CompetitorsSection = (props: Props) => {
-  const { data: competitors } = competitorAPI.useFetchAllCompetitorQuery(100)
+const CompetitorsSection = ({ tournament, action }: Props) => {
+  const dispatch = useAppDispatch()
+  const { data: competitors } =
+    tournamentAPI.useFetchTournamentRegistrationQuery(tournament.id)
   const [searchString, setSearchString] = useState("")
-  const [selectAll, setSelectAll] = useState(false)
+
+  const [selectedCompetitors, setSelectedCompetitors] = useState(
+    Array<TournamentRegistration>
+  )
+
+  const selectAllCompetitors = () => {
+    if (competitors) {
+      setSelectedCompetitors([])
+      if (!(selectedCompetitors.length === competitors?.length)) {
+        setSelectedCompetitors(competitors)
+      }
+    }
+  }
+
+  const confirm = () => {
+    if (selectedCompetitors.length > 0) {
+      selectedCompetitors.forEach((item, index) => {
+        if (!item.confirm) dispatch(confirmTournamentRegistration(item.id))
+      })
+    }
+  }
+
+  const deleteCompetitors = () => {
+    if (selectedCompetitors.length > 0) {
+      selectedCompetitors.forEach((item) => {
+        if (!item.confirm) dispatch(deleteTournamentRegistration(item.id))
+      })
+    }
+  }
+
+  const toggleCompetitorSelection = (competitor: TournamentRegistration) => {
+    // Check if the competitor is already selected
+    if (selectedCompetitors.includes(competitor)) {
+      // If selected, remove it from the list
+      setSelectedCompetitors((prevSelected) =>
+        prevSelected.filter((selected) => selected !== competitor)
+      )
+    } else {
+      // If not selected, add it to the list
+      setSelectedCompetitors((prevSelected) => [...prevSelected, competitor])
+    }
+  }
 
   return (
-    <div className="w-10/12">
+    <div className="w-full">
       <div>
         <div>
-          <div className="my-8 text-3xl font-medium text-lightblue-200">
-            Участники турнира
-          </div>
-          <div className="mb-8 flex items-center justify-between gap-4">
+          <div className="mb-4 flex items-center justify-between gap-4">
             <div className="w-11/12">
               <input
                 value={searchString}
                 onChange={(e) => setSearchString(e.target.value)}
                 type="text"
-                className="w-full rounded-lg border-2 border-gray-300 bg-white px-4 py-2 text-gray-400 outline-none"
+                className="w-full rounded-lg border-2 border-gray-300 bg-white px-4 py-2 text-gray-400 outline-none focus:border-gray-400"
                 placeholder="Поиск спортсмена"
               />
             </div>
             <div>
               <ActionButton
-                className="flex items-center gap-2 px-12 font-medium text-white"
-                onClick={() => {}}
+                className="flex items-center gap-2 px-[25px] py-[10px] font-medium text-gray-600"
+                onClick={action}
               >
-                <FontAwesomeIcon icon={faUserEdit} />
                 <div>Добавить</div>
+                <FontAwesomeIcon className="text-sm" icon={faUserPlus} />
               </ActionButton>
             </div>
           </div>
         </div>
-        <div className="w-full rounded-xl bg-white p-10">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ amount: 0.5 }}
+          transition={{ delay: 0.15 }}
+          className={` w-full items-center justify-end ${
+            selectedCompetitors.length === 0 ? "hidden" : "flex"
+          } gap-2`}
+          hidden={selectedCompetitors.length === 0}
+        >
+          <button
+            onClick={() => {
+              deleteCompetitors()
+              window.location.reload()
+            }}
+            className="rounded-lg border-[1px] border-primary-500 px-4 py-1 text-sm font-medium text-primary-500 transition hover:bg-primary-500 hover:text-white"
+          >
+            Удалить
+          </button>
+
+          <button
+            onClick={() => {
+              confirm()
+              window.location.reload()
+            }}
+            className="rounded-lg border-[1px] border-secondary-500 px-4 py-1 text-sm font-medium text-secondary-500 transition hover:bg-secondary-500 hover:text-white"
+          >
+            Подтвердить
+          </button>
+        </motion.div>
+        <div className="w-full rounded-2xl bg-white py-5">
           <div className="flex w-full justify-between text-sm font-medium text-gray-400">
-            <div className="flex w-1/6 items-center gap-2">
+            <div className="flex w-1/6 items-center gap-2 px-4">
               <Checkbox
-                className="mt-1"
-                isChecked={selectAll}
-                changeState={setSelectAll}
+                className="mt-1 cursor-pointer"
+                isChecked={selectedCompetitors.length === competitors?.length}
+                changeState={selectAllCompetitors}
               />
-              <div>Участник</div>
+              <div className="cursor-pointer" onClick={selectAllCompetitors}>
+                Участник
+              </div>
             </div>
-            <div>Статус</div>
-            <div>Страна</div>
-            <div>Роль</div>
-            <div>Город</div>
+            <div>Подтверждение</div>
+            <div>Пол</div>
+            <div>Категория</div>
+            <div>Весовая категория</div>
             <div>Рейтинг</div>
           </div>
           <div className="mb-4 mt-6 h-[1px] w-full bg-gray-200"></div>
           <div className="w-full">
             {competitors
               ?.filter((item) =>
-                getCompetitorFullname(item)
+                getCompetitorFullname(item.competitor)
                   ?.toLowerCase()
                   .trim()
                   .includes(searchString.toLowerCase().trim())
               )
               .map((item, index) => (
-                <div
-                  className="mt-8 flex w-full items-center justify-between"
+                <CompetitorNode
+                  competitor={item}
                   key={index}
-                >
-                  <div className="">
-                    <Checkbox
-                      className="mt-2"
-                      isChecked={false}
-                      changeState={() => {}}
-                    />
-                  </div>
-                  <div className="w-1/4 font-medium">
-                    {getCompetitorFullname(item)}
-                  </div>
-                  <div className="w-1/6 text-sm text-gray-400">
-                    {item.verified ? "Подтвержден" : "Не подтвержден"}
-                  </div>
-                  <div className="w-1/6 text-sm text-gray-400">
-                    {item.country}
-                  </div>
-                  <div className="w-1/6  text-sm text-gray-400">
-                    {getRoleString(item.mode)}
-                  </div>
-                  <div className=" w-1/12 text-sm text-gray-400">
-                    {item.city}
-                  </div>
-                  <div className="w-1/12 pl-10 text-center text-sm text-secondary-500">
-                    {item.elo_rating}
-                  </div>
-                </div>
+                  selected={selectedCompetitors.includes(item)}
+                  toggleSelection={() => toggleCompetitorSelection(item)}
+                />
               ))}
           </div>
         </div>

@@ -18,7 +18,7 @@ const LoginPage = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(false)
 
-  const isAuth = localStorage.getItem("token")
+  const isAuth = localStorage.getItem("apm_protocols_token")
 
   const onSumbit = () => {
     try {

@@ -21,6 +21,33 @@ export const Roles = [
   },
 ]
 
+export const tournamentCategoires = [
+  {
+    title: "Мужчины",
+    value: "men",
+  },
+  {
+    title: "Женщины",
+    value: "women",
+  },
+  {
+    title: "Юниоры 18+",
+    value: "juniors18",
+  },
+  {
+    title: "Юниоры 21+",
+    value: "juniors21",
+  },
+  {
+    title: "Ветераны",
+    value: "old",
+  },
+]
+
 export const getRoleString = (role: string) => {
   return Roles.find((item) => item.value === role)?.title
+}
+
+export const getCategoryString = (category: string) => {
+  return tournamentCategoires.find((item) => item.value === category)?.title
 }
