@@ -76,6 +76,28 @@ export const confirmTournamentRegistration =
     }
   }
 
+export const updateTournamentRegistration =
+  (
+    id: number,
+    weight: number,
+    weight_class: number,
+    category: string,
+    confirm: boolean,
+    paid: boolean,
+    hand: string
+  ) =>
+  async (dispatch: AppDispatch) => {
+    try {
+      const response = await axios.put(
+        `${SERVER_URL}/tournament_registration/${id}/`,
+        { id, weight_class, weight, category, confirm, paid, hand }
+      )
+      return response
+    } catch (e: AxiosError | any) {
+      console.log(e.message)
+    }
+  }
+
 export const deleteTournamentRegistration =
   (id: number) => async (dispatch: AppDispatch) => {
     try {

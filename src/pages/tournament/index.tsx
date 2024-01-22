@@ -13,7 +13,6 @@ import InformationWindow from "./info"
 import { leagueAPI } from "@/services/leaugeService"
 import CompetitorAdder from "@/components/competitorAdder"
 
-
 type Props = {}
 
 const items: Array<upMenuItem> = [
@@ -48,6 +47,9 @@ const TournamentPage = (props: Props) => {
   const { data: league } = leagueAPI.useFetchLeagueQuery(
     tournament?.league || -1
   )
+  const { data: competitors } =
+    tournamentAPI.useFetchTournamentRegistrationQuery(tournament?.id || -1)
+
   const [target, setTarget] = useState("competitors")
   const [adder, setAdder] = useState(false)
 
@@ -56,13 +58,22 @@ const TournamentPage = (props: Props) => {
       switch (target) {
         case "competitors":
           return (
-            <CompetitorsSection
-              action={() => setAdder(!adder)}
-              tournament={tournament}
-            />
+            competitors && (
+              <CompetitorsSection
+                action={() => setAdder(!adder)}
+                competitors={competitors}
+              />
+            )
           )
         case "categoires":
-          return <CategoryWindow />
+          return (
+            competitors && (
+              <CategoryWindow
+                competitors={competitors}
+                tournament={tournament}
+              />
+            )
+          )
         case "info":
           return (
             league && (

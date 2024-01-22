@@ -8,6 +8,7 @@ import TournamentPage from "./pages/tournament"
 import Logout from "./pages/logout"
 import SettingsPage from "./pages/settings"
 import CompetitorEditing from "./pages/editCompetitor"
+import CompetitorsPage from "./pages/competitorsPage"
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/" element={<MainPage />}>
             <Route path="" element={<TournamentsPage />} />
             <Route path="settings" element={<SettingsPage />} />
+            <Route path="/competitors" element={<CompetitorsPage />} />
             <Route
               path="tournament/:tournamentId"
               element={<TournamentPage />}

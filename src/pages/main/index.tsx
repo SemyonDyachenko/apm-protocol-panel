@@ -72,7 +72,7 @@ const MainPage = (props: Props) => {
       },
       icon: faDisplay,
       selected: false,
-      link: "/competitors",
+      link: "/streams",
     },
     {
       title: "Отчеты",
@@ -81,7 +81,7 @@ const MainPage = (props: Props) => {
       },
       icon: faFile,
       selected: false,
-      link: "/competitors",
+      link: "/docs",
     },
     {
       title: "Настройки",
@@ -98,7 +98,7 @@ const MainPage = (props: Props) => {
     <div className="max-w-screen min-h-screen  bg-slate-200">
       <div className="flex w-full">
         <SidebarMenu items={items} className="fixed" />
-        <div className="ml-[15%] md:w-[85%]">
+        <div className="ml-[10%] w-[90%] md:ml-[15%] md:w-[85%]">
           <UpBar title={targetTitle} />
           <div className="mt-[100px] w-full">
             <div className="w-full p-10">

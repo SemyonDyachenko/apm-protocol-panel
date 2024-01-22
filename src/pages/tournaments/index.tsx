@@ -24,7 +24,7 @@ const TournamentsPage = (props: Props) => {
           </div>
         </div>
         <div className="w-full">
-          <div className="flex w-full  gap-4 rounded-2xl py-5">
+          <div className="flex w-full gap-4 rounded-2xl py-5">
             {tournaments
               .filter(
                 (item) => new Date(item.date).getTime() > new Date().getTime()

@@ -35,12 +35,17 @@ const SidebarMenu = ({ className, items }: Props) => {
 
   return (
     <div
-      className={`left-0 top-0 ${className} h-screen bg-white shadow-md md:w-[15%]`}
+      className={`left-0 top-0 ${className} h-screen w-[10%] bg-white shadow-md md:w-[15%]`}
     >
       <div className="flex w-full justify-center py-5">
         <img
-          className="max-w-[150px]"
+          className="hidden max-w-[150px] md:block"
           src={"https://apm-league.ru/assets/logo/blacklogo.png"}
+          alt="image"
+        />
+        <img
+          className="max-w-[45px] md:hidden"
+          src={"/assets/ico.png"}
           alt="image"
         />
       </div>
@@ -58,20 +63,22 @@ const SidebarMenu = ({ className, items }: Props) => {
                   " border-r-4 border-secondary-500 text-secondary-500"
                 }`}
               >
-                <div className="w-1/12">
+                <div className="w-full text-center md:w-1/12 md:text-left">
                   <FontAwesomeIcon className="text-lg" icon={item.icon} />
                 </div>
-                <div>{item.title}</div>
+                <div className="hidden md:block">{item.title}</div>
               </div>
             </Link>
           ))}
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 mb-10 px-8 font-medium ">
-        <div className="flex items-center gap-4 text-gray-400 transition hover:text-secondary-500">
-          <FontAwesomeIcon icon={faRightFromBracket} />
-          <Link to="/logout">Выйти</Link>
-        </div>
+      <div className="absolute bottom-0 left-1/2 mb-10 -translate-x-1/2 font-medium md:left-0 md:-translate-x-0 md:px-8">
+        <Link className="w-full" to="/logout">
+          <div className="flex w-full items-center  text-gray-400 transition hover:text-secondary-500 md:gap-4">
+            <FontAwesomeIcon icon={faRightFromBracket} />
+            <div className="hidden md:block">Выйти</div>
+          </div>
+        </Link>
       </div>
     </div>
   )

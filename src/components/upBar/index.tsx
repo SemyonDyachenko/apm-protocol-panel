@@ -19,7 +19,7 @@ const UpBar = ({ title }: Props) => {
   const { competitor, loading } = useAppSelector((state) => state.competitors)
 
   return (
-    <div className="fixed left-[15%] h-[100px] w-[85%] border-[0.5px] border-gray-200 bg-white">
+    <div className="fixed left-[10%] h-[100px] w-[90%] border-[0.5px] border-gray-200 bg-white md:left-[15%] md:w-[85%]">
       <div className="flex h-full items-center justify-between px-10 py-4">
         <div className="text-xl font-semibold text-gray-700">{title}</div>
         <div className="flex items-center gap-4">

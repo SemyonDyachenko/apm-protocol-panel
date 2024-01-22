@@ -26,6 +26,8 @@ const CompetitorAdder = ({ active, closeFunc, tournament }: Props) => {
     tournament.id
   )
 
+  const [search, setSearch] = useState("")
+
   const [selectedCompetitor, setSelectedCompetitor] =
     useState<Competitor | null>(null)
   const [category, setCategory] = useState("men")
@@ -70,6 +72,8 @@ const CompetitorAdder = ({ active, closeFunc, tournament }: Props) => {
         <div className="mt-4 flex items-center">
           <input
             type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="my-2 w-full rounded-l-lg border-[1px] border-r-[0px] border-lightblue-200 bg-lightblue-100 px-4 py-2 text-lightblue-200 outline-none placeholder:text-lightblue-200"
             placeholder="Поиск"
           />
@@ -106,28 +110,35 @@ const CompetitorAdder = ({ active, closeFunc, tournament }: Props) => {
         )}
         {!selectedCompetitor && (
           <div className="mt-2 overflow-y-scroll md:max-h-[250px] ">
-            {competitors?.map((item, index) => (
-              <div
-                onClick={() => setSelectedCompetitor(item)}
-                className="my-2 mr-2  flex cursor-pointer items-center justify-between rounded-lg border-[1px] px-4 py-2 transition hover:bg-gray-80"
-                key={index}
-              >
-                <div className="flex items-center gap-2">
-                  <div>
-                    <img
-                      className="h-[45px] w-[45px] rounded-full  border-gray-300"
-                      src={item.image ? item.image.toString() : NonImage}
-                    />
+            {competitors
+              ?.filter((item) =>
+                getCompetitorFullname(item)
+                  ?.trim()
+                  .toLowerCase()
+                  .includes(search.trim().toLowerCase())
+              )
+              .map((item, index) => (
+                <div
+                  onClick={() => setSelectedCompetitor(item)}
+                  className="my-2 mr-2  flex cursor-pointer items-center justify-between rounded-lg border-[1px] px-4 py-2 transition hover:bg-gray-80"
+                  key={index}
+                >
+                  <div className="flex items-center gap-2">
+                    <div>
+                      <img
+                        className="h-[45px] w-[45px] rounded-full  border-gray-300"
+                        src={item.image ? item.image.toString() : NonImage}
+                      />
+                    </div>
+                    <div className="text-md font-medium text-lightblue-200">
+                      {getCompetitorFullname(item)}
+                    </div>
                   </div>
-                  <div className="text-md font-medium text-lightblue-200">
-                    {getCompetitorFullname(item)}
+                  <div className="font-medium text-secondary-500">
+                    {item.elo_rating}
                   </div>
                 </div>
-                <div className="font-medium text-secondary-500">
-                  {item.elo_rating}
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
         )}
         <div className="mt-4">

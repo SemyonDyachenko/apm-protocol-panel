@@ -35,15 +35,17 @@ const CompetitorEditing = (props: Props) => {
   const [target, setTarget] = useState("registration")
 
   const getWindow = () => {
-    switch (target) {
-      case "registration":
-        return <RegistrationWindow />
+    if (competitor) {
+      switch (target) {
+        case "registration":
+          return <RegistrationWindow competitor={competitor[0]} />
+      }
     }
   }
 
   if (competitor)
     return (
-      <div>
+      <div className="w-full">
         <div className="w-full rounded-2xl bg-white px-10 py-5">
           <div>
             <ReturnLine className="py-4" />
@@ -70,7 +72,7 @@ const CompetitorEditing = (props: Props) => {
                 to={`https://apm-league.ru/competitor/${competitor[0].competitor.id}`}
               >
                 <ActionButton
-                  className="px-8 py-3 font-semibold text-gray-600"
+                  className="rounded-xl px-8 py-3 font-semibold text-gray-600"
                   onClick={() => {}}
                 >
                   Карточка спортсмена

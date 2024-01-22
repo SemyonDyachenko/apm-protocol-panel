@@ -23,14 +23,22 @@ import { useAppDispatch } from "@/hooks/redux"
 import CompetitorEditor from "@/components/competitorEditor"
 
 type Props = {
-  tournament: Tournament
+  tournament?: Tournament
+  competitors: TournamentRegistration[]
+  search?: boolean
   action: () => void
+  inactive?: boolean
 }
 
-const CompetitorsSection = ({ tournament, action }: Props) => {
+const CompetitorsSection = ({
+  tournament,
+  competitors,
+  action,
+  search = true,
+  inactive = false,
+}: Props) => {
   const dispatch = useAppDispatch()
-  const { data: competitors } =
-    tournamentAPI.useFetchTournamentRegistrationQuery(tournament.id)
+
   const [searchString, setSearchString] = useState("")
 
   const [selectedCompetitors, setSelectedCompetitors] = useState(
@@ -79,17 +87,20 @@ const CompetitorsSection = ({ tournament, action }: Props) => {
     <div className="w-full">
       <div>
         <div>
-          <div className="mb-4 flex items-center justify-between gap-4">
-            <div className="w-11/12">
+          <div
+            hidden={!search}
+            className="mb-4 flex items-center justify-between gap-4"
+          >
+            <div hidden={!search} className="w-11/12">
               <input
                 value={searchString}
                 onChange={(e) => setSearchString(e.target.value)}
                 type="text"
-                className="w-full rounded-lg border-2 border-gray-300 bg-white px-4 py-2 text-gray-400 outline-none focus:border-gray-400"
+                className="w-full rounded-lg border-2 border-gray-300 bg-white px-4 py-2 text-gray-400 outline-none transition focus:border-lightblue-200 focus:text-lightblue-200"
                 placeholder="Поиск спортсмена"
               />
             </div>
-            <div>
+            <div hidden={!search}>
               <ActionButton
                 className="flex items-center gap-2 px-[25px] py-[10px] font-medium text-gray-600"
                 onClick={action}
@@ -108,7 +119,7 @@ const CompetitorsSection = ({ tournament, action }: Props) => {
           className={` w-full items-center justify-end ${
             selectedCompetitors.length === 0 ? "hidden" : "flex"
           } gap-2`}
-          hidden={selectedCompetitors.length === 0}
+          hidden={selectedCompetitors.length === 0 || inactive}
         >
           <button
             onClick={() => {
@@ -133,17 +144,22 @@ const CompetitorsSection = ({ tournament, action }: Props) => {
         <div className="w-full rounded-2xl bg-white py-5">
           <div className="flex w-full justify-between text-sm font-medium text-gray-400">
             <div className="flex w-1/6 items-center gap-2 px-4">
-              <Checkbox
-                className="mt-1 cursor-pointer"
-                isChecked={selectedCompetitors.length === competitors?.length}
-                changeState={selectAllCompetitors}
-              />
-              <div className="cursor-pointer" onClick={selectAllCompetitors}>
+              {!inactive && (
+                <Checkbox
+                  className="mt-1 cursor-pointer"
+                  isChecked={selectedCompetitors.length === competitors?.length}
+                  changeState={selectAllCompetitors}
+                />
+              )}
+              <div
+                className="cursor-pointer"
+                onClick={!inactive ? selectAllCompetitors : () => {}}
+              >
                 Участник
               </div>
             </div>
             <div>Подтверждение</div>
-            <div>Пол</div>
+            <div>Рука</div>
             <div>Категория</div>
             <div>Весовая категория</div>
             <div>Рейтинг</div>
@@ -162,7 +178,9 @@ const CompetitorsSection = ({ tournament, action }: Props) => {
                   competitor={item}
                   key={index}
                   selected={selectedCompetitors.includes(item)}
-                  toggleSelection={() => toggleCompetitorSelection(item)}
+                  toggleSelection={() =>
+                    !inactive && toggleCompetitorSelection(item)
+                  }
                 />
               ))}
           </div>

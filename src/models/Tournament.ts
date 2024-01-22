@@ -31,6 +31,9 @@ export interface TournamentRegistration {
   registration_date: string
   category: string
   confirm: boolean
+  weight: number
+  paid: boolean
+  hand: string
 }
 
 export const getTournamentLevel = (tournament: Tournament) => {

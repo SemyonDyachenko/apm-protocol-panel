@@ -1,5 +1,6 @@
 import Checkbox from "@/components/UI/Checkbox"
 import CompetitorEditor from "@/components/competitorEditor"
+import ConfirmModal from "@/components/modals/confirmModal"
 import Popup from "@/components/popup"
 import { useAppDispatch } from "@/hooks/redux"
 import Competitor, {
@@ -71,7 +72,8 @@ const CompetitorNode = ({ competitor, selected, toggleSelection }: Props) => {
           )}
         </div>
         <div className="w-1/6 pl-5 text-sm text-gray-400">
-          {getCompetitorGender(competitor.competitor)}
+          {competitor.hand === "left" ? "Левая" : "Правая"
+          }
         </div>
         <div className="w-1/5  text-sm text-gray-400">
           {getCategoryString(competitor.category)}
@@ -99,11 +101,11 @@ const CompetitorNode = ({ competitor, selected, toggleSelection }: Props) => {
           >
             Выбрать
           </div>
-          <div className="cursor-pointer px-4 py-2 transition hover:bg-gray-200">
-            <Link to={`/competitor/editing/${competitor.id}`}>
+          <Link to={`/competitor/editing/${competitor.id}`}>
+            <div className="cursor-pointer px-4 py-2 transition hover:bg-gray-200">
               Редактировать
-            </Link>
-          </div>
+            </div>
+          </Link>
           <div
             onClick={deleteCompetitor}
             className="cursor-pointer px-4 py-2 text-primary-500 transition hover:bg-gray-200"

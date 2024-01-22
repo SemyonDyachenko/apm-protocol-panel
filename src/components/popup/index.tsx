@@ -1,3 +1,4 @@
+import { applyScroll } from "@/utils/func"
 import { MotionStyle, motion } from "framer-motion"
 import React, { useEffect, useRef } from "react"
 
@@ -19,6 +20,7 @@ const Popup = ({ active, closeFunc, children, className, style }: Props) => {
         !popupRef.current.contains(event.target as HTMLElement)
       ) {
         closeFunc()
+        applyScroll()
       }
     }
     document.addEventListener("mousedown", handleClickOutside)
