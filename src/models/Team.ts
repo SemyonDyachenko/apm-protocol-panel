@@ -23,7 +23,7 @@ export interface TeamCompetitor {
   datetime: Date
 }
 
-export const getLeagueStatus = (team: Team) => {
+export const getTeamStatus = (team: Team) => {
   return team.status.toLocaleLowerCase() === "pro"
     ? "Профессиональная"
     : "Любительская"

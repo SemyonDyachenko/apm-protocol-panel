@@ -5,6 +5,7 @@ import { TournamentRegistration } from "@/models/Tournament"
 import { weightClassAPI } from "@/services/weightClassService"
 import { updateTournamentRegistration } from "@/store/actions/tournamentAction"
 import { getCategoryString, tournamentCategoires } from "@/utils/string"
+import { competitorInputTitleStyle, competitorinputStyle } from "@/utils/styles"
 import React, { useState } from "react"
 
 type Props = {
@@ -13,9 +14,6 @@ type Props = {
 
 const RegistrationWindow = ({ competitor }: Props) => {
   const dispatch = useAppDispatch()
-  const titleStyle = "text-sm text-lightblue-200 my-1"
-  const inputStyle =
-    "w-full py-3 px-4 bg-white disabled:bg-lightblue-100 border-lightblue-200 border-[1px] outline-none rounded-2xl text-lightblue-200"
 
   const { data: classes } = weightClassAPI.useFetchTournamentClassesQuery(
     competitor.tournament
@@ -54,19 +52,19 @@ const RegistrationWindow = ({ competitor }: Props) => {
     <div className="w-full px-4 md:w-10/12 md:pb-5">
       <div className="grid w-full gap-8 md:grid-cols-3">
         <div>
-          <div className={titleStyle}>Пол:</div>
+          <div className={competitorInputTitleStyle}>Пол:</div>
           <input
             disabled
             defaultValue={getCompetitorGender(competitor.competitor) || ""}
-            className={inputStyle}
+            className={competitorinputStyle}
           />
         </div>
         <div>
-          <div className={titleStyle}>Категория:</div>
+          <div className={competitorInputTitleStyle}>Категория:</div>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className={`${inputStyle} `}
+            className={`${competitorinputStyle} `}
           >
             {tournamentCategoires.map((item, index) => (
               <option key={index} value={item.value}>
@@ -76,11 +74,11 @@ const RegistrationWindow = ({ competitor }: Props) => {
           </select>
         </div>
         <div>
-          <div className={titleStyle}>Оплата:</div>
+          <div className={competitorInputTitleStyle}>Оплата:</div>
           <select
             value={paid.toString()}
             onChange={(e) => setPaid(e.target.value === "true")}
-            className={inputStyle}
+            className={competitorinputStyle}
           >
             <option value={"true"}>Оплачен</option>
 
@@ -88,11 +86,11 @@ const RegistrationWindow = ({ competitor }: Props) => {
           </select>
         </div>
         <div>
-          <div className={titleStyle}>Статус:</div>
+          <div className={competitorInputTitleStyle}>Статус:</div>
           <select
             value={confirm.toString()}
             onChange={(e) => setConfirm(e.target.value === "true")}
-            className={inputStyle}
+            className={competitorinputStyle}
           >
             <option value={"true"}>Подтвержден</option>
 
@@ -100,11 +98,11 @@ const RegistrationWindow = ({ competitor }: Props) => {
           </select>
         </div>
         <div>
-          <div className={titleStyle}>Рука:</div>
+          <div className={competitorInputTitleStyle}>Рука:</div>
           <select
             value={hand}
             onChange={(e) => setHand(e.target.value)}
-            className={inputStyle}
+            className={competitorinputStyle}
           >
             <option value="left">Левая</option>
 
@@ -112,11 +110,11 @@ const RegistrationWindow = ({ competitor }: Props) => {
           </select>
         </div>
         <div>
-          <div className={titleStyle}>Весовая категория:</div>
+          <div className={competitorInputTitleStyle}>Весовая категория:</div>
           <select
             value={selectedWeightClass}
             onChange={(e) => setSelectedWeightClass(+e.target.value)}
-            className={`${inputStyle} `}
+            className={`${competitorinputStyle} `}
           >
             {classes
               ?.filter((item) => item.category === selectedCategory)
@@ -128,23 +126,23 @@ const RegistrationWindow = ({ competitor }: Props) => {
           </select>
         </div>
         <div>
-          <div className={titleStyle}>Вес:</div>
+          <div className={competitorInputTitleStyle}>Вес:</div>
           <input
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
-            className={inputStyle}
+            className={competitorinputStyle}
           />
         </div>
         <div>
           <div className="my-1 text-sm text-lightblue-200">Команда:</div>
-          <select className={`${inputStyle} `}>
+          <select className={`${competitorinputStyle} `}>
             <option>Нет</option>
           </select>
         </div>
       </div>
       <div className="mt-8">
         <ActionButton
-          className="rounded-xl px-24 py-3 font-medium"
+          className="rounded-xl px-8 py-3 font-medium text-gray-600 md:w-[200px]"
           onClick={update}
         >
           Сохранить

@@ -44,7 +44,9 @@ const InformationWindow = ({ tournament, league }: Props) => {
         </div>
         <div>
           <div className="mb-1 text-sm text-lightblue-200">Описание:</div>
-          <div className="text-sm text-gray-600 ">{tournament.description}</div>
+          <div className="text-sm font-medium text-gray-600 ">
+            {tournament.description}
+          </div>
         </div>
         <div className="mt-8 grid w-full grid-cols-4 gap-12">
           <div>

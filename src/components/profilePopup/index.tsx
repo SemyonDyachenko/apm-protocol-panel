@@ -2,6 +2,7 @@ import { CompetitorData } from "@/store/slices/competitorSlice"
 import { motion } from "framer-motion"
 import { useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
+import { popupRef } from "@/hooks/popup"
 
 type Props = {
   active: boolean
@@ -10,14 +11,11 @@ type Props = {
 }
 
 const ProfilePopup = ({ active, closeFunc, competitor }: Props) => {
-  const popupRef = useRef<HTMLDivElement | null>(null)
+  const ref = popupRef()
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
-      if (
-        popupRef.current &&
-        !popupRef.current.contains(event.target as HTMLElement)
-      ) {
+      if (ref.current && !ref.current.contains(event.target as HTMLElement)) {
         closeFunc()
       }
     }
@@ -30,7 +28,7 @@ const ProfilePopup = ({ active, closeFunc, competitor }: Props) => {
 
   return (
     <motion.div
-      ref={popupRef}
+      ref={ref}
       hidden={!active}
       initial={{ opacity: 0, scale: 0.75 }}
       whileInView={{ opacity: 1, scale: 1 }}

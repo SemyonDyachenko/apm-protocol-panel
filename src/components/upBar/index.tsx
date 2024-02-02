@@ -15,6 +15,7 @@ type Props = {
 const UpBar = ({ title }: Props) => {
   const [profilePopup, setProfilePopup] = useState(false)
   const [searchPopup, setSearchPopup] = useState(false)
+  const [searchString, setSearchString] = useState("")
 
   const { competitor, loading } = useAppSelector((state) => state.competitors)
 
@@ -24,21 +25,27 @@ const UpBar = ({ title }: Props) => {
         <div className="text-xl font-semibold text-gray-700">{title}</div>
         <div className="flex items-center gap-4">
           <div>
-            <div className="flex items-center">
-              <FontAwesomeIcon
-                className="text-md rounded-l-full bg-lightblue-100 py-3 pl-6 text-lightblue-200"
-                icon={faSearch}
-              />
+            <div className="flex items-center ">
               <input
+                value={searchString}
+                onChange={(e) => setSearchString(e.target.value)}
                 onFocus={() => setSearchPopup(!searchPopup)}
-                className="rounded-r-full bg-lightblue-100 px-4 py-2 text-lightblue-200
-            outline-none placeholder:text-lightblue-200  md:w-[300px]"
+                className="rounded-l-full bg-lightblue-100 px-8 py-2 text-lightblue-200
+            outline-none placeholder:text-lightblue-200 md:w-[300px] "
                 placeholder="Поиск турниров"
+              />
+              <FontAwesomeIcon
+                className=" text-md rounded-r-full bg-lightblue-100 py-3 pr-6 text-lightblue-200"
+                icon={faSearch}
               />
             </div>
             <SearchPopup
+              searchString={searchString}
               active={searchPopup}
-              closeFunc={() => setSearchPopup(false)}
+              closeFunc={() => {
+                setSearchPopup(false)
+                setSearchString("")
+              }}
             />
           </div>
           <div>

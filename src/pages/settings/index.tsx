@@ -23,12 +23,16 @@ const items: Array<upMenuItem> = [
 const SettingsPage = (props: Props) => {
   const [target, setTarget] = useState("profile")
 
-
   return (
     <div>
       <div className="w-full rounded-xl bg-white  px-10 py-5">
         <div>
           <ReturnLine className="py-4" />
+        </div>
+        <div>
+          <div className="my-8 text-3xl font-semibold text-lightblue-200">
+            Параметры и Безопасность
+          </div>
         </div>
         <div className="mt-8 px-2">
           <UpMenu items={items} changeTarget={setTarget} />

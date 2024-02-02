@@ -27,6 +27,7 @@ module.exports = {
         "secondary-600": "#DAAE28",
         "lightblue-100": "#F5F7FA",
         "lightblue-200": "#8BA3CB",
+        "lightblue-500": "#1814F3",
       },
       fontFamily: {
         dmsans: ["DM Sans", "sans-serif"],
@@ -38,7 +39,7 @@ module.exports = {
     screens: {
       xs: "480px",
       sm: "768px",
-      md: "1060px",
+      md: "1280px",
     },
   },
   plugins: [],

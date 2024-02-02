@@ -50,7 +50,7 @@ const SidebarMenu = ({ className, items }: Props) => {
         />
       </div>
       <div className="mt-16">
-        <div className="flex flex-col gap-y-2  font-medium text-gray-400">
+        <div className="flex flex-col gap-y-2  font-medium text-gray-600">
           {items.map((item, index) => (
             <Link to={`${item.link}`} key={index}>
               <div
@@ -58,9 +58,9 @@ const SidebarMenu = ({ className, items }: Props) => {
                   if (!item.disabled) setSelected(index)
                 }}
                 key={index}
-                className={`flex cursor-pointer items-center gap-4 px-8 py-4 transition hover:bg-gray-70 ${
+                className={`flex cursor-pointer items-center gap-4 rounded-2xl py-4 transition hover:bg-gray-70 md:mx-2 md:px-6 ${
                   window.location.pathname === item.link &&
-                  " border-r-4 border-secondary-500 text-secondary-500"
+                  "text-secondary-500 hover:bg-secondary-500 md:bg-secondary-500 md:text-white"
                 }`}
               >
                 <div className="w-full text-center md:w-1/12 md:text-left">
@@ -74,7 +74,7 @@ const SidebarMenu = ({ className, items }: Props) => {
       </div>
       <div className="absolute bottom-0 left-1/2 mb-10 -translate-x-1/2 font-medium md:left-0 md:-translate-x-0 md:px-8">
         <Link className="w-full" to="/logout">
-          <div className="flex w-full items-center  text-gray-400 transition hover:text-secondary-500 md:gap-4">
+          <div className="flex w-full items-center  text-gray-600 transition hover:text-secondary-500 md:gap-4">
             <FontAwesomeIcon icon={faRightFromBracket} />
             <div className="hidden md:block">Выйти</div>
           </div>

@@ -8,6 +8,8 @@ import { getRoleString } from "@/utils/string"
 import ActionButton from "@/components/UI/ActionButton"
 import UpMenu, { upMenuItem } from "@/components/upMenu"
 import RegistrationWindow from "./registration"
+import CompetitorInfo from "./info"
+import CompetitorStats from "./stats"
 
 type Props = {}
 
@@ -39,6 +41,10 @@ const CompetitorEditing = (props: Props) => {
       switch (target) {
         case "registration":
           return <RegistrationWindow competitor={competitor[0]} />
+        case "info":
+          return <CompetitorInfo competitor={competitor[0].competitor} />
+        case "stats":
+          return <CompetitorStats competitor={competitor[0].competitor} />
       }
     }
   }

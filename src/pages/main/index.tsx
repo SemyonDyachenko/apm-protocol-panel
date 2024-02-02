@@ -68,7 +68,7 @@ const MainPage = (props: Props) => {
     {
       title: "Трансляция",
       onClick: () => {
-        setTargetTitle("Спортсмены")
+        setTargetTitle("Трансляция")
       },
       icon: faDisplay,
       selected: false,
@@ -77,7 +77,7 @@ const MainPage = (props: Props) => {
     {
       title: "Отчеты",
       onClick: () => {
-        setTargetTitle("Спортсмены")
+        setTargetTitle("Отчеты")
       },
       icon: faFile,
       selected: false,

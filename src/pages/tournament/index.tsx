@@ -12,6 +12,13 @@ import CategoryWindow from "./categories"
 import InformationWindow from "./info"
 import { leagueAPI } from "@/services/leaugeService"
 import CompetitorAdder from "@/components/competitorAdder"
+import TournamentDocsPage from "./docs"
+import TournamentLeaguePage from "./league"
+import { competitorAPI } from "@/services/competitorService"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCamera, faImage } from "@fortawesome/free-solid-svg-icons"
+import { getTournamentEnded } from "@/models/Tournament"
+import TournamentStartPopup from "@/pages/tournament/startPopup"
 
 type Props = {}
 
@@ -23,7 +30,7 @@ const items: Array<upMenuItem> = [
   },
   {
     title: "Категории",
-    target: "categoires",
+    target: "categories",
   },
   {
     title: "Информация",
@@ -31,7 +38,7 @@ const items: Array<upMenuItem> = [
   },
   {
     title: "Правила",
-    target: "rules",
+    target: "docs",
   },
   {
     title: "Лига",
@@ -52,6 +59,7 @@ const TournamentPage = (props: Props) => {
 
   const [target, setTarget] = useState("competitors")
   const [adder, setAdder] = useState(false)
+  const [startWindow, setStartWindow] = useState(false)
 
   const getWindow = () => {
     if (tournament) {
@@ -65,7 +73,7 @@ const TournamentPage = (props: Props) => {
               />
             )
           )
-        case "categoires":
+        case "categories":
           return (
             competitors && (
               <CategoryWindow
@@ -80,6 +88,10 @@ const TournamentPage = (props: Props) => {
               <InformationWindow league={league} tournament={tournament} />
             )
           )
+        case "docs":
+          return <TournamentDocsPage />
+        case "league":
+          return league && <TournamentLeaguePage league={league} />
       }
     }
   }
@@ -88,14 +100,27 @@ const TournamentPage = (props: Props) => {
   if (tournament)
     return (
       <div>
-        <div className="w-full rounded-2xl bg-white px-10 py-5 ">
+        <div className="w-full rounded-2xl bg-white px-10 py-5">
           <div>
             <ReturnLine className="py-4" />
           </div>
           <div className="my-4 flex items-center justify-between">
             <div className="flex items-center gap-x-4">
-              <div className="">
+              <div className="relative h-[65px] w-[65px]">
+                <div
+                  onClick={() =>
+                    window.location.replace(
+                      `https://apm-league.ru/tournament/editing/${tournament.id}`
+                    )
+                  }
+                  className="absolute cursor-pointer rounded-full bg-black text-2xl text-white opacity-0 transition hover:opacity-50"
+                >
+                  <div className="flex h-[65px] w-[65px] items-center justify-center">
+                    <FontAwesomeIcon icon={faCamera} />
+                  </div>
+                </div>
                 <img
+                  alt="logo.jpg"
                   className="h-[65px] w-[65px] rounded-full"
                   src={tournament.logo ? tournament.logo.toString() : NonImage}
                 />
@@ -111,8 +136,9 @@ const TournamentPage = (props: Props) => {
             </div>
             <div>
               <ActionButton
-                className="px-8 py-3 font-semibold text-gray-600"
-                onClick={() => {}}
+                disabled={getTournamentEnded(tournament)}
+                className="px-8 py-3 font-semibold text-gray-600 disabled:bg-gray-300"
+                onClick={() => setStartWindow(true)}
               >
                 Начать турнир
               </ActionButton>
@@ -127,6 +153,11 @@ const TournamentPage = (props: Props) => {
           tournament={tournament}
           active={adder}
           closeFunc={() => setAdder(false)}
+        />
+        <TournamentStartPopup
+          tournament={tournament}
+          active={startWindow}
+          closeFunc={() => setStartWindow(false)}
         />
       </div>
     )

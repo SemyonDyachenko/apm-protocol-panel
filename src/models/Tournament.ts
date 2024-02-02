@@ -1,6 +1,7 @@
 import Competitor from "./Competitor"
 import League from "./League"
 import WeightClass from "./WeightClass"
+import { getNormalizeDate } from "@/utils/date"
 
 export default interface Tournament {
   id: number
@@ -40,4 +41,8 @@ export const getTournamentLevel = (tournament: Tournament) => {
   return tournament.level.toLocaleLowerCase() === "pro"
     ? "Профессиональный"
     : "Любительский"
+}
+
+export const getTournamentEnded = (tournament: Tournament) => {
+  return new Date(tournament.date).getTime() <= new Date().getTime()
 }
