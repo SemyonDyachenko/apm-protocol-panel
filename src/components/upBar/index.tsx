@@ -1,5 +1,10 @@
 import { CompetitorData } from "@/store/slices/competitorSlice"
-import { faBell, faGear, faSearch } from "@fortawesome/free-solid-svg-icons"
+import {
+  faBell,
+  faGear,
+  faMoon,
+  faSearch,
+} from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import NonImage from "/assets/utils/nonuserimage.jpg"
 import { useAppSelector } from "@/hooks/redux"
@@ -52,6 +57,13 @@ const UpBar = ({ title }: Props) => {
             <Link to="/settings">
               <div className="flex h-[45px] w-[45px] cursor-pointer items-center justify-center rounded-full bg-lightblue-100 text-lightblue-200 transition hover:bg-secondary-500 hover:text-white">
                 <FontAwesomeIcon className="text-xl" icon={faGear} />
+              </div>
+            </Link>
+          </div>
+          <div>
+            <Link to="/settings">
+              <div className="flex h-[45px] w-[45px] cursor-pointer items-center justify-center rounded-full bg-lightblue-100 text-lightblue-200 transition hover:bg-secondary-500 hover:text-white">
+                <FontAwesomeIcon className="text-xl" icon={faMoon} />
               </div>
             </Link>
           </div>

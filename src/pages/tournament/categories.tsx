@@ -2,7 +2,7 @@ import ActionButton from "@/components/UI/ActionButton"
 import CustomSelect from "@/components/UI/CustomSelect"
 import Tournament, { TournamentRegistration } from "@/models/Tournament"
 import { weightClassAPI } from "@/services/weightClassService"
-import { tournamentCategoires } from "@/utils/string"
+import { tournamentCategories } from "@/utils/string"
 import React, { useState } from "react"
 import CompetitorsSection from "../competitors"
 import { motion } from "framer-motion"
@@ -72,7 +72,7 @@ const CategoryWindow = ({ tournament, competitors }: Props) => {
             value={category}
             setValue={setCategory}
           >
-            {tournamentCategoires.map((item, index) => (
+            {tournamentCategories.map((item, index) => (
               <option key={index} value={item.value}>
                 {item.title}
               </option>

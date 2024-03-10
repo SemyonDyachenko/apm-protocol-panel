@@ -4,7 +4,7 @@ import { getCompetitorGender } from "@/models/Competitor"
 import { TournamentRegistration } from "@/models/Tournament"
 import { weightClassAPI } from "@/services/weightClassService"
 import { updateTournamentRegistration } from "@/store/actions/tournamentAction"
-import { getCategoryString, tournamentCategoires } from "@/utils/string"
+import { getCategoryString, tournamentCategories } from "@/utils/string"
 import { competitorInputTitleStyle, competitorinputStyle } from "@/utils/styles"
 import React, { useState } from "react"
 
@@ -66,7 +66,7 @@ const RegistrationWindow = ({ competitor }: Props) => {
             onChange={(e) => setSelectedCategory(e.target.value)}
             className={`${competitorinputStyle} `}
           >
-            {tournamentCategoires.map((item, index) => (
+            {tournamentCategories.map((item, index) => (
               <option key={index} value={item.value}>
                 {item.title}
               </option>

@@ -9,7 +9,7 @@ import { competitorAPI } from "@/services/competitorService"
 import NonImage from "/assets/utils/nonuserimage.jpg"
 
 import Popup from "../popup"
-import { tournamentCategoires } from "@/utils/string"
+import { tournamentCategories } from "@/utils/string"
 import { useAppDispatch } from "@/hooks/redux"
 import { registerForTournament } from "@/store/actions/tournamentAction"
 
@@ -149,7 +149,7 @@ const CompetitorAdder = ({ active, closeFunc, tournament }: Props) => {
               className="w-full rounded-lg border-[1px] border-t-[1px] border-lightblue-200 bg-lightblue-100 px-4 py-2 text-lightblue-200 outline-none"
             >
               <option value="">Нет</option>
-              {tournamentCategoires
+              {tournamentCategories
                 .filter((item) =>
                   selectedCompetitor?.gender === "m"
                     ? item.value !== "women"

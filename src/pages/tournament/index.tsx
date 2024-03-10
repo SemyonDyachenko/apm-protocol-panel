@@ -4,7 +4,7 @@ import UpMenu, { upMenuItem } from "@/components/upMenu"
 import { tournamentAPI } from "@/services/tournamentsService"
 import { getNormalizeDate } from "@/utils/date"
 import React, { useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import CompetitorsSection from "../competitors"
 import ActionButton from "@/components/UI/ActionButton"
 import NonImage from "/assets/utils/nonuserimage.jpg"
@@ -47,6 +47,7 @@ const items: Array<upMenuItem> = [
 ]
 
 const TournamentPage = (props: Props) => {
+  const navigate = useNavigate()
   const { tournamentId } = useParams()
   const { data: tournament, isLoading } = tournamentAPI.useFetchTournamentQuery(
     parseInt(tournamentId || "")
@@ -106,7 +107,7 @@ const TournamentPage = (props: Props) => {
           </div>
           <div className="my-4 flex items-center justify-between">
             <div className="flex items-center gap-x-4">
-              <div className="relative h-[65px] w-[65px]">
+              <div className=" h-[65px] w-[65px]">
                 <div
                   onClick={() =>
                     window.location.replace(
@@ -121,7 +122,7 @@ const TournamentPage = (props: Props) => {
                 </div>
                 <img
                   alt="logo.jpg"
-                  className="h-[65px] w-[65px] rounded-full"
+                  className="z-[1] h-[65px] w-[65px] rounded-full"
                   src={tournament.logo ? tournament.logo.toString() : NonImage}
                 />
               </div>
@@ -138,9 +139,12 @@ const TournamentPage = (props: Props) => {
               <ActionButton
                 disabled={getTournamentEnded(tournament)}
                 className="px-8 py-3 font-semibold text-gray-600 disabled:bg-gray-300"
-                onClick={() => setStartWindow(true)}
+                onClick={() => {
+                  if (!tournament.is_started) setStartWindow(true)
+                  else navigate(`/tournament/system/${tournament.id}`)
+                }}
               >
-                Начать турнир
+                {tournament.is_started ? "Система протоколов" : `Начать турнир`}
               </ActionButton>
             </div>
           </div>

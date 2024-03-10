@@ -10,6 +10,7 @@ import SettingsPage from "./pages/settings"
 import CompetitorEditing from "./pages/editCompetitor"
 import CompetitorsPage from "./pages/competitorsPage"
 import DocsPage from "./pages/docs"
+import TournamentSystem from "@/pages/system"
 
 function App() {
   return (
@@ -24,6 +25,10 @@ function App() {
             <Route
               path="tournament/:tournamentId"
               element={<TournamentPage />}
+            />
+            <Route
+              path="tournament/system/:tournamentId"
+              element={<TournamentSystem />}
             />
             <Route
               path="competitor/editing/:registrationId"

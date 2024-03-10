@@ -33,6 +33,7 @@ export const changeTournamentStatus =
         `${SERVER_URL}/startTournament/${tournamentId}/`,
         { activated: status, tournamentId }
       )
+      return response
     } catch (e: AxiosError | any) {
       console.log(e.message)
     }

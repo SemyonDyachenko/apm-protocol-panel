@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import Tournament from "@/models/Tournament"
 import { popupRef } from "@/hooks/popup"
 import { motion } from "framer-motion"
@@ -6,6 +6,10 @@ import { applyScroll } from "@/utils/func"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faClose } from "@fortawesome/free-solid-svg-icons"
 import ActionButton from "@/components/UI/ActionButton"
+import { useAppDispatch } from "@/hooks/redux"
+import { changeTournamentStatus } from "@/store/actions/tournamentAction"
+import { useNavigate } from "react-router-dom"
+import tournaments from "@/pages/tournaments"
 
 type Props = {
   tournament: Tournament
@@ -14,7 +18,11 @@ type Props = {
 }
 
 const TournamentStartPopup = ({ tournament, active, closeFunc }: Props) => {
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const ref = popupRef()
+
+  const [mode, setMode] = useState("easy")
 
   useEffect(() => {
     document.body.style.overflowY = active ? "hidden" : "scrollY"
@@ -32,6 +40,16 @@ const TournamentStartPopup = ({ tournament, active, closeFunc }: Props) => {
       document.removeEventListener("mousedown", handleClickOutside)
     }
   })
+
+  const start = () => {
+    if (!tournament.is_started)
+      dispatch(changeTournamentStatus(tournament.id, true)).then((res) => {
+        if (res && res.status === 200) {
+          navigate(`/tournament/system/${tournament.id}`)
+          window.location.reload()
+        }
+      })
+  }
 
   return (
     <div
@@ -66,6 +84,26 @@ const TournamentStartPopup = ({ tournament, active, closeFunc }: Props) => {
           Параметры турнира
         </div>
         <div className="mt-2 px-4">
+          <div>
+            <div className="mx-auto mb-4 flex w-full justify-between rounded-lg border-[1px] border-gray-80 bg-gray-70 px-2 py-1 font-medium text-lightblue-200 transition">
+              <div
+                onClick={() => setMode("easy")}
+                className={`flex h-full w-1/2 cursor-pointer justify-center rounded-lg py-2 ${
+                  mode === "easy" && "bg-gray-200 "
+                }  transition delay-75`}
+              >
+                Ручной
+              </div>
+              <div
+                onClick={() => setMode("automatic")}
+                className={`flex w-1/2  cursor-pointer  justify-center py-2 transition ${
+                  mode === "automatic" && "bg-gray-200"
+                }  rounded-lg delay-75`}
+              >
+                Автоматический
+              </div>
+            </div>
+          </div>
           <div className="mb-4">
             <div className="my-1 text-sm text-lightblue-200">
               Тип жеребьевки:
@@ -92,8 +130,8 @@ const TournamentStartPopup = ({ tournament, active, closeFunc }: Props) => {
           </div>
           <div className="my-6">
             <ActionButton
-              className="w-full py-2 font-medium text-gray-600"
-              onClick={() => {}}
+              className="w-full py-3 font-semibold text-gray-600"
+              onClick={start}
             >
               Начать турнир
             </ActionButton>
