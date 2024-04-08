@@ -24,14 +24,16 @@ export interface TournamentRegistrationData {
   tournament: number
   weight_class: number
   category: string
+  hand: string
 }
 
 export const changeTournamentStatus =
-  (tournamentId: number, status: boolean) => async (dispatch: AppDispatch) => {
+  (tournamentId: number, status: boolean, mode: string) =>
+  async (dispatch: AppDispatch) => {
     try {
       const response = await axios.put<Tournament>(
         `${SERVER_URL}/startTournament/${tournamentId}/`,
-        { activated: status, tournamentId }
+        { activated: status, tournamentId, mode }
       )
       return response
     } catch (e: AxiosError | any) {

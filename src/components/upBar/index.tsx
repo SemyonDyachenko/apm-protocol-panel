@@ -76,9 +76,7 @@ const UpBar = ({ title }: Props) => {
             <div className="mx-4 cursor-pointer rounded-full">
               <img
                 className="h-[55px] w-[55px] rounded-full border-[1px] "
-                src={
-                  "https://apm-tech.ru/media/competitors_userpictures/photo_zepTaR7.jpg"
-                }
+                src={competitor?.image?.toString() || NonImage}
               />
             </div>
           </div>

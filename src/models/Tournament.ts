@@ -21,6 +21,7 @@ export default interface Tournament {
   level: string
   phone: string
   active: boolean
+  mode: string
   afisha?: File
 }
 

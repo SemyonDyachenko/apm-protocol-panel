@@ -15,4 +15,5 @@ export default interface Match {
   weight_class: WeightClass
   date: string
   round: number
+  category: string
 }

@@ -8,6 +8,7 @@ export default interface Competitor {
   gender: string
   image: File | null
   elo_rating: number
+  elo_rating_right: number
   kFactor: number
   mode: string
   weight: number

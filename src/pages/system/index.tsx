@@ -9,6 +9,8 @@ import { getNormalizeDate } from "@/utils/date"
 import ActionButton from "@/components/UI/ActionButton"
 import { getTournamentEnded } from "@/models/Tournament"
 import ManualSystem from "@/pages/system/manual"
+import AutomaticSystem from "@/pages/system/automatic"
+import { weightClassAPI } from "@/services/weightClassService"
 
 type Props = {}
 
@@ -17,6 +19,14 @@ const TournamentSystem = (props: Props) => {
   const { tournamentId } = useParams()
   const { data: tournament } = tournamentAPI.useFetchTournamentQuery(
     parseInt(tournamentId || "")
+  )
+
+  const { data: competitors } =
+    tournamentAPI.useFetchTournamentRegistrationQuery(
+      tournament ? tournament.id : -1
+    )
+  const { data: classes } = weightClassAPI.useFetchTournamentClassesQuery(
+    tournament ? tournament.id : -1
   )
 
   const [unsavedData, setUnsavedData] = useState(true)
@@ -66,7 +76,29 @@ const TournamentSystem = (props: Props) => {
     }
   }, [tournament])
 
-  if (tournament && tournament.is_started)
+  const getTournamentSystem = () => {
+    if (tournament && classes && competitors)
+      switch (tournament.mode) {
+        case "manual":
+          return (
+            <ManualSystem
+              tournament={tournament}
+              classes={classes}
+              competitors={competitors}
+            />
+          )
+        case "automatic":
+          return (
+            <AutomaticSystem
+              tournament={tournament}
+              classes={classes}
+              competitors={competitors}
+            />
+          )
+      }
+  }
+
+  if (tournament && tournament.is_started && classes && competitors)
     return (
       <div>
         <div className="w-full rounded-2xl bg-white px-10 py-5">
@@ -115,7 +147,11 @@ const TournamentSystem = (props: Props) => {
           </div>
           <div className="my-4 h-[1px] w-full bg-gray-200 px-4"></div>
           <div>
-            <ManualSystem tournament={tournament} />
+            <ManualSystem
+              tournament={tournament}
+              classes={classes}
+              competitors={competitors}
+            />
           </div>
         </div>
       </div>

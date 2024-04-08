@@ -1,6 +1,5 @@
 import axios, { AxiosError } from "axios"
 import { AppDispatch } from "../store"
-import authSlice from "../slices/authSlice"
 import { SERVER_URL } from "@/api/instance"
 import Match from "@/models/Match"
 
@@ -22,6 +21,19 @@ export const createMatch =
       const response = await axios.post<Match>(`${SERVER_URL}/matches/`, data)
       console.log(response.data)
       return response
+    } catch (error: AxiosError | any) {
+      console.log(error.message)
+    }
+  }
+
+export const removeMatch =
+  (matchId: number) => async (dispatch: AppDispatch) => {
+    try {
+      return await axios.delete<any>(`${SERVER_URL}/matches/${matchId}`, {
+        params: {
+          id: matchId,
+        },
+      })
     } catch (error: AxiosError | any) {
       console.log(error.message)
     }

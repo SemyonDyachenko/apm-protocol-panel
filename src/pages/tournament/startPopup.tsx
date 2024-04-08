@@ -43,12 +43,14 @@ const TournamentStartPopup = ({ tournament, active, closeFunc }: Props) => {
 
   const start = () => {
     if (!tournament.is_started)
-      dispatch(changeTournamentStatus(tournament.id, true)).then((res) => {
-        if (res && res.status === 200) {
-          navigate(`/tournament/system/${tournament.id}`)
-          window.location.reload()
+      dispatch(changeTournamentStatus(tournament.id, true, mode)).then(
+        (res) => {
+          if (res && res.status === 200) {
+            navigate(`/tournament/system/${tournament.id}`)
+            window.location.reload()
+          }
         }
-      })
+      )
   }
 
   return (

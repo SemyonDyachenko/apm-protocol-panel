@@ -33,6 +33,8 @@ const CompetitorAdder = ({ active, closeFunc, tournament }: Props) => {
   const [category, setCategory] = useState("men")
   const [weightClass, setWeightClass] = useState(-1)
 
+  const [hand, setHand] = useState("left")
+
   const registerCompetitor = () => {
     if (selectedCompetitor && category && weightClass !== -1) {
       dispatch(
@@ -41,6 +43,7 @@ const CompetitorAdder = ({ active, closeFunc, tournament }: Props) => {
           tournament: tournament.id,
           weight_class: weightClass,
           category: category,
+          hand: hand,
         })
       ).then((res) => {
         if (res) {
@@ -141,6 +144,29 @@ const CompetitorAdder = ({ active, closeFunc, tournament }: Props) => {
               ))}
           </div>
         )}
+        <div className="mt-4">
+          <div className="my-1 text-sm text-lightblue-200">Рука:</div>
+          <div className="">
+            <div className="mx-auto mb-4 flex w-full justify-between rounded-lg border-[1px] border-gray-80 bg-gray-70 px-2 py-1 font-medium text-lightblue-200 transition">
+              <div
+                onClick={() => setHand("left")}
+                className={`flex h-full w-1/2 cursor-pointer justify-center rounded-lg py-2 ${
+                  hand === "left" && "bg-gray-200 "
+                }  transition delay-75`}
+              >
+                Левая
+              </div>
+              <div
+                onClick={() => setHand("right")}
+                className={`flex w-1/2  cursor-pointer  justify-center py-2 transition ${
+                  hand === "right" && "bg-gray-200"
+                }  rounded-lg delay-75`}
+              >
+                Правая
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="mt-4">
           <div className="mb-1 text-sm text-lightblue-200">Категория:</div>
           <div>
