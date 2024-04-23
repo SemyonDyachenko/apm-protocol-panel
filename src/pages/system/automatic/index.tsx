@@ -31,7 +31,8 @@ const AutomaticSystem = ({ tournament, classes, competitors }: Props) => {
     weightClass: number,
     firstCompetitor: number,
     secondCompetitor: number,
-    category: string
+    category: string,
+    round?: number
   ) => {
     dispatch(
       createMatch({
@@ -42,6 +43,7 @@ const AutomaticSystem = ({ tournament, classes, competitors }: Props) => {
         first_competitor: firstCompetitor,
         second_competitor: secondCompetitor,
         category,
+        round: round,
       })
     )
   }

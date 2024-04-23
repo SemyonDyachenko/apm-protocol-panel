@@ -14,16 +14,16 @@ export const calculateEloRating = (
   let outcome = winner === competitor1 ? 1 : 0
   let expectedPlayerScore = 1 / (1 + Math.pow(10, (rating2 - rating1) / 400))
   let expectedOpponentScore = 1 - expectedPlayerScore
-  console.log(expectedPlayerScore)
+
   let updatedPlayerRating =
     rating1 +
     competitor1KFactor * tournamentCoefficient * (outcome - expectedPlayerScore)
-  console.log(updatedPlayerRating)
+
   let updatedOpponentRating =
     rating2 +
     competitor2KFactor *
       tournamentCoefficient *
       (1 - outcome - expectedOpponentScore)
-  console.log(updatedOpponentRating)
+
   return [Math.round(updatedPlayerRating), Math.round(updatedOpponentRating)]
 }

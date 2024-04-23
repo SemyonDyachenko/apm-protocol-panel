@@ -13,6 +13,7 @@ export interface MatchData {
   second_competitor: number
   category: string
   winner?: number
+  round?: number
 }
 
 export const createMatch =
@@ -23,6 +24,32 @@ export const createMatch =
       return response
     } catch (error: AxiosError | any) {
       console.log(error.message)
+    }
+  }
+
+export const removeMatchesFromCategory =
+  (
+    hand: string,
+    category: string,
+    tournamentId: number,
+    weight_classId: number
+  ) =>
+  async (dispatch: AppDispatch) => {
+    try {
+      const response = await axios.post<any>(
+        `${SERVER_URL}/matches/remove_matches_of_category/`,
+        {
+          hand,
+          category,
+          tournamentId,
+          weight_classId,
+        }
+      )
+      console.log(response.data)
+      return response
+    } catch (error: AxiosError | any) {
+      console.log(error.message)
+      return error
     }
   }
 

@@ -51,3 +51,16 @@ export const getRoleString = (role: string) => {
 export const getCategoryString = (category: string) => {
   return tournamentCategories.find((item) => item.value === category)?.title
 }
+
+export const getRoundStatus = (status: string) => {
+  switch (status) {
+    case "midifinal":
+      return "Полуфинал"
+    case "final":
+      return "Финал"
+    case "superfinal":
+      return "Супер Финал"
+    default:
+      return ""
+  }
+}

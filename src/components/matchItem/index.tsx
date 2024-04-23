@@ -17,6 +17,7 @@ type Props = {
   refreshWinner: () => void
   refreshMatches: () => void
   className?: string
+  onClick?: (winner: number, looser: number) => void
 }
 
 const MatchItem = ({
@@ -25,6 +26,7 @@ const MatchItem = ({
   refreshWinner,
   className,
   refreshMatches,
+  onClick,
 }: Props) => {
   const dispatch = useAppDispatch()
 
@@ -51,6 +53,16 @@ const MatchItem = ({
         }
       )
     }
+    /*
+    if (onClick) {
+      console.log("ASDSADSAD")
+      let loser =
+        match.first_competitor.id != winner
+          ? match.first_competitor.id
+          : match.second_competitor.id
+      onClick(winner, loser)
+    }
+   */
   }
 
   const deleteMatch = () => {

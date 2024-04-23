@@ -146,13 +146,7 @@ const TournamentSystem = (props: Props) => {
             </div>
           </div>
           <div className="my-4 h-[1px] w-full bg-gray-200 px-4"></div>
-          <div>
-            <ManualSystem
-              tournament={tournament}
-              classes={classes}
-              competitors={competitors}
-            />
-          </div>
+          <div>{getTournamentSystem()}</div>
         </div>
       </div>
     )
