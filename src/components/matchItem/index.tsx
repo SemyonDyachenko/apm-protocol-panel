@@ -50,6 +50,7 @@ const MatchItem = ({
         (res) => {
           console.log(res)
           refreshWinner()
+          refreshMatches()
         }
       )
     }

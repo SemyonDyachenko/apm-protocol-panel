@@ -1,6 +1,6 @@
 import Match from "@/models/Match"
 import Tournament, { TournamentRegistration } from "@/models/Tournament"
-import { useEffect, useState } from "react"
+import { Dispatch, useEffect, useState } from "react"
 import MatchItem from "@/components/matchItem"
 import WeightClass, { TournamentWeightClass } from "@/models/WeightClass"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -68,15 +68,16 @@ const AutomaticMatchTable = ({
     useState<CompetitorWithLosses | null>(null)
 
   const [roundType, setRoundType] = useState("")
+  const [triggerUpdate, setTriggerUpdate] = useState(false)
 
   useEffect(() => {
     refreshMatches()
     setFilteredMatches(
       matches.filter(
-        (item) =>
-          item.category == selectedCategory &&
-          item.weight_class.id == selectedWeightClass &&
-          item.hand == selectedHand
+        (match) =>
+          match.category == selectedCategory &&
+          match.weight_class.id == selectedWeightClass &&
+          match.hand == selectedHand
       )
     )
   }, [
@@ -85,7 +86,7 @@ const AutomaticMatchTable = ({
     selectedHand,
     selectedCategory,
     currentRound,
-  ])
+  ]) // Добавление triggerUpdate в зависимости
 
   useEffect(() => {
     const initialCompetitorsWithLosses = competitors
@@ -139,7 +140,6 @@ const AutomaticMatchTable = ({
   const startCategory = () => {
     if (!initialCompetitors) {
       return -1
-      console.log("ERROR NOT COMPETITORS")
     }
 
     if (currentRound === 0) {
@@ -259,6 +259,7 @@ const AutomaticMatchTable = ({
     if (winners.length > 0 && currentRound > 0) {
       createMatches(winners, currentRound, true)
       refreshMatches()
+      setTriggerUpdate((prev) => !prev)
     }
   }, [winners, currentRound]) // Зависимости: winners и currentRound
 
@@ -267,6 +268,7 @@ const AutomaticMatchTable = ({
     if (losers.length > 0 && currentRound > 0) {
       createMatches(losers, currentRound, false)
       refreshMatches()
+      setTriggerUpdate((prev) => !prev)
     }
   }, [losers, currentRound]) // Зависимости: losers и currentRound
 
@@ -283,10 +285,40 @@ const AutomaticMatchTable = ({
         if (res && res.status == 200) {
           window.location.reload()
         }
-        console.log(res)
       })
     }
   }
+
+  const allMatchesDecided = (matches: Match[]) => {
+    return matches.every(
+      (match) => match.winner !== undefined && match.winner !== null
+    )
+  }
+
+  useEffect(() => {
+    refreshMatches()
+    console.log("matches changed")
+  }, [matches, triggerUpdate])
+
+  /*
+  useEffect(() => {
+    // Предполагается, что у каждого матча есть атрибут `winner`, который null, если победитель не определён
+    if (currentRound > 0) {
+      if (
+        allMatchesDecided(
+          matches.filter(
+            (item) =>
+              item.category == selectedCategory &&
+              item.hand == selectedHand &&
+              item.weight_class.id == selectedWeightClass &&
+              item.round === currentRound
+          )
+        )
+      ) {
+        nextRound()
+      }
+    }
+  }, [currentRound, matches])*/
 
   return (
     <div className="mt-4 w-1/2 px-2">
@@ -392,18 +424,36 @@ const AutomaticMatchTable = ({
         ></div>
       </motion.div>
       <div className="max-h-[350px] overflow-y-scroll pr-2">
-        {filteredMatches
-          ?.filter((item) => !item.winner)
+        {matches
+          .filter(
+            (item) =>
+              item.category == selectedCategory &&
+              item.weight_class.id == selectedWeightClass &&
+              item.hand == selectedHand
+          )
+          ?.filter((item) => item.round == currentRound && !item.winner)
           .map((item, index) => (
             <MatchItem
               key={index}
               refreshWinner={refreshMatches}
-              match={item}
+              match={
+                filteredMatches.filter(
+                  (item) => item.round == currentRound && !item.winner
+                )[0]
+              }
               refreshMatches={refreshMatches}
               tournament={tournament}
             />
           ))}
-        {filteredMatches?.filter((item) => !item.winner).length === 0 && (
+        {matches
+          .filter(
+            (item) =>
+              item.category == selectedCategory &&
+              item.weight_class.id == selectedWeightClass &&
+              item.hand == selectedHand
+          )
+          ?.filter((item) => item.round == currentRound && !item.winner)
+          .length === 0 && (
           <div className="mt-8 flex justify-center text-xl font-medium text-gray-600">
             Поединки отсутствуют
           </div>

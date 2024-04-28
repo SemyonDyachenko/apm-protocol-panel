@@ -2,6 +2,7 @@ import ReturnLine from "@/components/returnLine"
 import UpMenu, { upMenuItem } from "@/components/upMenu"
 import React, { useEffect, useState } from "react"
 import ProfileSettings from "@/pages/settings/profile"
+import { useAppSelector } from "@/hooks/redux"
 
 type Props = {}
 
@@ -22,12 +23,13 @@ const items: Array<upMenuItem> = [
 ]
 
 const SettingsPage = (props: Props) => {
+  const { competitor } = useAppSelector((state) => state.competitors)
   const [target, setTarget] = useState("profile")
 
   const getWindow = () => {
     switch (target) {
       case "profile":
-        return <ProfileSettings />
+        return competitor && <ProfileSettings competitor={competitor} />
     }
   }
 
