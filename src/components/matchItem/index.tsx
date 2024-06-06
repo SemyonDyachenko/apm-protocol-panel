@@ -18,6 +18,7 @@ type Props = {
   refreshMatches: () => void
   className?: string
   onClick?: (winner: number, looser: number) => void
+  minimize?: boolean
 }
 
 const MatchItem = ({
@@ -27,6 +28,7 @@ const MatchItem = ({
   className,
   refreshMatches,
   onClick,
+  minimize,
 }: Props) => {
   const dispatch = useAppDispatch()
 
@@ -73,7 +75,11 @@ const MatchItem = ({
   }
 
   return (
-    <div className="flex items-center gap-x-3">
+    <div
+      className={`flex ${
+        minimize && "mx-auto w-[95%] opacity-[0.65]"
+      } items-center gap-x-3`}
+    >
       <div>
         <FontAwesomeIcon
           onClick={deleteMatch}
@@ -87,7 +93,9 @@ const MatchItem = ({
         <div className="flex items-center justify-between gap-4">
           <div
             onClick={() => defineWinner(match.first_competitor.id)}
-            className={`h-[80px]  w-[48%] cursor-pointer rounded-xl ${
+            className={`${
+              minimize ? "h-[75px]" : "h-[80px]"
+            }  w-[48%] cursor-pointer rounded-xl ${
               match.winner === match.first_competitor.id
                 ? "bg-secondary-400"
                 : "bg-white"
@@ -139,7 +147,9 @@ const MatchItem = ({
           <div className="text-4xl font-black text-gray-600">VS</div>
           <div
             onClick={() => defineWinner(match.second_competitor.id)}
-            className={`h-[80px] w-[48%] cursor-pointer rounded-xl rounded-l-none ${
+            className={`${
+              minimize ? "h-[75px]" : "h-[80px]"
+            }    w-[48%] cursor-pointer rounded-xl rounded-l-none ${
               match.winner === match.second_competitor.id
                 ? "bg-secondary-400"
                 : "bg-white"

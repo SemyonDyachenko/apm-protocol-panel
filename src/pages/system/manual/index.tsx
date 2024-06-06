@@ -43,6 +43,8 @@ const ManualSystem = ({ tournament, classes, competitors }: Props) => {
   const { data: matches, refetch: refreshMatches } =
     matchAPI.useFetchMatchesQuery(tournament.id)
 
+  console.log(matches)
+
   const addMatch = () => {
     if (weightClass && firstCompetitor && secondCompetitor)
       dispatch(

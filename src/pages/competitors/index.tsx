@@ -18,6 +18,7 @@ import { tournamentAPI } from "@/services/tournamentsService"
 import {
   confirmTournamentRegistration,
   deleteTournamentRegistration,
+  updateTournamentRegistration,
 } from "@/store/actions/tournamentAction"
 import { useAppDispatch } from "@/hooks/redux"
 import CompetitorEditor from "@/components/competitorEditor"
@@ -51,6 +52,31 @@ const CompetitorsSection = ({
       if (!(selectedCompetitors.length === competitors?.length)) {
         setSelectedCompetitors(competitors)
       }
+    }
+  }
+
+  const unconfirm = () => {
+    if (selectedCompetitors.length > 0) {
+      selectedCompetitors.forEach((item, index) => {
+        if (item.confirm)
+          dispatch(
+            updateTournamentRegistration(
+              item.id,
+              item.weight,
+              item.weight_class.id,
+              item.category,
+              false,
+              item.paid,
+              item.hand
+            )
+          ).then((res) => {
+            if (res && res.status === 200) {
+              window.location.reload()
+            } else {
+              alert("Произошла ошибка!")
+            }
+          })
+      })
     }
   }
 
@@ -130,7 +156,12 @@ const CompetitorsSection = ({
           >
             Удалить
           </button>
-
+          <button
+            onClick={unconfirm}
+            className="rounded-lg border-[1px] border-secondary-500 px-4 py-1 text-sm font-medium text-secondary-500 transition hover:bg-secondary-500 hover:text-white"
+          >
+            Отменить
+          </button>
           <button
             onClick={() => {
               confirm()

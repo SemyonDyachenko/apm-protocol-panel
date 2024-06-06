@@ -13,6 +13,7 @@ import { matchAPI } from "@/services/matchService"
 import Competitor from "@/models/Competitor"
 import { useAppDispatch } from "@/hooks/redux"
 import { removeMatchesFromCategory } from "@/store/actions/matchAction"
+import registration from "@/pages/editCompetitor/registration"
 
 type Props = {
   competitors: TournamentRegistration[]
@@ -69,24 +70,37 @@ const AutomaticMatchTable = ({
 
   const [roundType, setRoundType] = useState("")
   const [triggerUpdate, setTriggerUpdate] = useState(false)
+  const [isLoadingMatches, setIsLoadingMatches] = useState(false)
+
+  const [stopedCategory, stopCategory] = useState(false)
+
+  const [finishedCategories, setFinishedCategories] = useState(new Set())
+  const [acceptLosers, setAcceptLosers] = useState(false)
+
+  const addFinishedCategory = (item: number) => {
+    setFinishedCategories(new Set(finishedCategories).add(item))
+  }
 
   useEffect(() => {
     refreshMatches()
-    setFilteredMatches(
-      matches.filter(
-        (match) =>
-          match.category == selectedCategory &&
-          match.weight_class.id == selectedWeightClass &&
-          match.hand == selectedHand
+    if (!isLoadingMatches) {
+      setFilteredMatches(
+        matches.filter(
+          (match) =>
+            match.category == selectedCategory &&
+            match.weight_class.id == selectedWeightClass &&
+            match.hand == selectedHand
+        )
       )
-    )
+    }
+    refreshMatches()
   }, [
     matches,
     selectedWeightClass,
     selectedHand,
     selectedCategory,
-    currentRound,
-  ]) // Добавление triggerUpdate в зависимости
+    isLoadingMatches,
+  ])
 
   useEffect(() => {
     const initialCompetitorsWithLosses = competitors
@@ -94,7 +108,8 @@ const AutomaticMatchTable = ({
         (registration) =>
           registration.category == selectedCategory &&
           registration.hand == selectedHand &&
-          registration.weight_class.id == selectedWeightClass
+          registration.weight_class.id == selectedWeightClass &&
+          registration.confirm
       )
       .map((registration) => ({
         competitor: registration.competitor,
@@ -134,13 +149,18 @@ const AutomaticMatchTable = ({
     if (newWinnersWithoutPairs) setWinnersWithoutPairs(newWinnersWithoutPairs)
     if (newLosersWithoutPairs) setLosersWithoutPairs(newLosersWithoutPairs)
 
+    setIsLoadingMatches(true)
     refreshMatches()
+    setTimeout(() => {
+      setIsLoadingMatches(false)
+    }, 250) // Adjust delay based on expected refresh duration
   }
 
   const startCategory = () => {
     if (!initialCompetitors) {
       return -1
     }
+    stopCategory(false)
 
     if (currentRound === 0) {
       setCurrentRound(1)
@@ -249,7 +269,7 @@ const AutomaticMatchTable = ({
       setLosers(newLosers)
     }
 
-    setCurrentRound(currentRound + 1)
+    setCurrentRound((current) => current + 1)
 
     refreshMatches()
   }
@@ -260,17 +280,21 @@ const AutomaticMatchTable = ({
       createMatches(winners, currentRound, true)
       refreshMatches()
       setTriggerUpdate((prev) => !prev)
+      setAcceptLosers(true)
     }
   }, [winners, currentRound]) // Зависимости: winners и currentRound
 
   useEffect(() => {
     // Этот useEffect срабатывает каждый раз, когда обновляется состояние losers
     if (losers.length > 0 && currentRound > 0) {
-      createMatches(losers, currentRound, false)
-      refreshMatches()
-      setTriggerUpdate((prev) => !prev)
+      if (acceptLosers) {
+        createMatches(losers, currentRound, false)
+        refreshMatches()
+        setTriggerUpdate((prev) => !prev)
+        setAcceptLosers(false)
+      }
     }
-  }, [losers, currentRound]) // Зависимости: losers и currentRound
+  }, [losers, currentRound, acceptLosers]) // Зависимости: losers и currentRound
 
   const clearCategoryRounds = () => {
     if (selectedWeightClass && selectedHand && category) {
@@ -288,11 +312,8 @@ const AutomaticMatchTable = ({
       })
     }
   }
-
   const allMatchesDecided = (matches: Match[]) => {
-    return matches.every(
-      (match) => match.winner !== undefined && match.winner !== null
-    )
+    return matches.length > 0 && matches.every((match) => match.winner)
   }
 
   useEffect(() => {
@@ -300,25 +321,25 @@ const AutomaticMatchTable = ({
     console.log("matches changed")
   }, [matches, triggerUpdate])
 
-  /*
+  const [lastUpdatedRound, setLastUpdatedRound] = useState(0)
+
   useEffect(() => {
-    // Предполагается, что у каждого матча есть атрибут `winner`, который null, если победитель не определён
-    if (currentRound > 0) {
-      if (
-        allMatchesDecided(
-          matches.filter(
-            (item) =>
-              item.category == selectedCategory &&
-              item.hand == selectedHand &&
-              item.weight_class.id == selectedWeightClass &&
-              item.round === currentRound
-          )
-        )
-      ) {
+    refreshMatches()
+    setLastUpdatedRound(currentRound)
+  }, [currentRound])
+
+  useEffect(() => {
+    refreshMatches()
+    if (!isLoadingMatches && currentRound !== 0) {
+      const roundMatches = filteredMatches.filter(
+        (item) => item.round === currentRound
+      )
+      if (allMatchesDecided(roundMatches)) {
         nextRound()
       }
     }
-  }, [currentRound, matches])*/
+    refreshMatches()
+  }, [filteredMatches, currentRound])
 
   return (
     <div className="mt-4 w-1/2 px-2">
@@ -424,38 +445,31 @@ const AutomaticMatchTable = ({
         ></div>
       </motion.div>
       <div className="max-h-[350px] overflow-y-scroll pr-2">
-        {matches
-          .filter(
-            (item) =>
-              item.category == selectedCategory &&
-              item.weight_class.id == selectedWeightClass &&
-              item.hand == selectedHand
-          )
+        {filteredMatches
           ?.filter((item) => item.round == currentRound && !item.winner)
+          .slice(0, 2)
           .map((item, index) => (
-            <MatchItem
-              key={index}
-              refreshWinner={refreshMatches}
-              match={
-                filteredMatches.filter(
-                  (item) => item.round == currentRound && !item.winner
-                )[0]
-              }
-              refreshMatches={refreshMatches}
-              tournament={tournament}
-            />
+            <div>
+              <MatchItem
+                key={index}
+                minimize={index !== 0}
+                refreshWinner={refreshMatches}
+                match={item}
+                refreshMatches={refreshMatches}
+                tournament={tournament}
+              />
+              {index === 0 && (
+                <div className="w-full text-center text-sm font-medium text-secondary-500">
+                  Next
+                </div>
+              )}
+            </div>
           ))}
-        {matches
-          .filter(
-            (item) =>
-              item.category == selectedCategory &&
-              item.weight_class.id == selectedWeightClass &&
-              item.hand == selectedHand
-          )
-          ?.filter((item) => item.round == currentRound && !item.winner)
-          .length === 0 && (
+        {filteredMatches?.filter(
+          (item) => item.round == currentRound && !item.winner
+        ).length === 0 && (
           <div className="mt-8 flex justify-center text-xl font-medium text-gray-600">
-            Поединки отсутствуют
+            {stopedCategory ? "Категория завершена" : "Поединки отсутствуют"}
           </div>
         )}
       </div>

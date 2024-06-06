@@ -25,7 +25,7 @@ const CustomInput = ({
     <div>
       {label && <div className="py-1 text-[13px] text-gray-400">{label}:</div>}
       <input
-        className={`text-md rounded-lg border-[1px] border-lightblue-200 bg-white px-4 py-1 text-lightblue-200 outline-none transition focus:text-gray-700 ${className}`}
+        className={`text-md rounded-lg border-[1px] border-lightblue-200 bg-lightblue-100 px-4 py-1 text-lightblue-200 outline-none transition focus:border-[1px] focus:shadow-sm ${className}`}
         value={value}
         type={type}
         placeholder={placeholder}
