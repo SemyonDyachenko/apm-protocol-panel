@@ -83,7 +83,12 @@ const CompetitorsSection = ({
   const confirm = () => {
     if (selectedCompetitors.length > 0) {
       selectedCompetitors.forEach((item, index) => {
-        if (!item.confirm) dispatch(confirmTournamentRegistration(item.id))
+        if (!item.confirm)
+          dispatch(confirmTournamentRegistration(item.id)).then((res) => {
+            if (index === selectedCompetitors.length - 1) {
+              window.location.reload()
+            }
+          })
       })
     }
   }
@@ -165,7 +170,6 @@ const CompetitorsSection = ({
           <button
             onClick={() => {
               confirm()
-              window.location.reload()
             }}
             className="rounded-lg border-[1px] border-secondary-500 px-4 py-1 text-sm font-medium text-secondary-500 transition hover:bg-secondary-500 hover:text-white"
           >

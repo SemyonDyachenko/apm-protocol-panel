@@ -12,4 +12,7 @@ export interface TournamentWeightClass {
   tournament: number
   weight_class: WeightClass
   category: string
+  completed_left: boolean
+  completed_right: boolean
+  roundsCount: number
 }

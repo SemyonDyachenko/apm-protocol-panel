@@ -147,3 +147,24 @@ export const createTournamentWeightClasses =
       console.log(error.message)
     }
   }
+
+export const completeTournamentWeightClass =
+  (id: number, completed: boolean, hand: string) =>
+  async (dispatch: AppDispatch) => {
+    let data =
+      hand == "left"
+        ? { completed_left: completed }
+        : { completed_right: completed }
+    try {
+      const response = await axios.put<any>(
+        `${SERVER_URL}/tournament_weightclasses/${id}/`,
+        {
+          id,
+          ...data,
+        }
+      )
+      return response
+    } catch (error: AxiosError | any) {
+      console.log(error.message)
+    }
+  }

@@ -46,7 +46,7 @@ const CategoryWindow = ({ tournament, competitors }: Props) => {
         <div>
           <div className="my-1 text-sm text-lightblue-200">Рука:</div>
           <CustomSelect
-            className="w-[200px] py-2"
+            className="h-[35px] w-[200px]"
             value={hand}
             setValue={setHand}
           >
@@ -57,7 +57,7 @@ const CategoryWindow = ({ tournament, competitors }: Props) => {
         <div>
           <div className="my-1 text-sm text-lightblue-200">Пол:</div>
           <CustomSelect
-            className="w-[200px] py-2"
+            className="h-[35px] w-[200px]"
             value={gender}
             setValue={setGender}
           >
@@ -68,7 +68,7 @@ const CategoryWindow = ({ tournament, competitors }: Props) => {
         <div>
           <div className="my-1 text-sm text-lightblue-200">Категория:</div>
           <CustomSelect
-            className="w-[200px] py-2"
+            className="h-[35px] w-[200px]"
             value={category}
             setValue={setCategory}
           >
@@ -80,11 +80,11 @@ const CategoryWindow = ({ tournament, competitors }: Props) => {
           </CustomSelect>
         </div>
         <div>
-          <div className="my-1 text-sm text-lightblue-200">
+          <div className="my-1  text-sm text-lightblue-200">
             Весовая категория:
           </div>
           <CustomSelect
-            className="w-[200px] py-2"
+            className="h-[35px] w-[200px]"
             value={weight}
             setValue={setWeight}
           >
@@ -102,7 +102,7 @@ const CategoryWindow = ({ tournament, competitors }: Props) => {
         <div>
           <div className="my-1 text-sm text-transparent">Сохранить</div>
           <ActionButton
-            className="rounded-xl px-8 font-medium text-gray-600"
+            className="rounded-lg px-8 font-medium text-gray-600"
             onClick={save}
           >
             Сохранить

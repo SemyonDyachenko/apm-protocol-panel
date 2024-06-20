@@ -7,6 +7,8 @@ import { useAppDispatch } from "@/hooks/redux"
 import { matchAPI } from "@/services/matchService"
 import AutomaticMatchTable from "@/components/automaticTable"
 import { createMatch } from "@/store/actions/matchAction"
+import MatchesTable from "@/components/matchesTable"
+import CategoriesTable from "@/components/categoriesTable"
 
 type Props = {
   tournament: Tournament
@@ -25,6 +27,9 @@ const AutomaticSystem = ({ tournament, classes, competitors }: Props) => {
 
   const { data: matches, refetch: refreshMatches } =
     matchAPI.useFetchMatchesQuery(tournament.id)
+
+  const [matchesTable, openMatchesTable] = useState(false)
+  const [categoriesTable, openCategoriesTable] = useState(false)
 
   const addMatch = (
     hand: string,
@@ -51,8 +56,30 @@ const AutomaticSystem = ({ tournament, classes, competitors }: Props) => {
   return (
     <div>
       <div className="mb-4 mt-8 flex items-center justify-between">
-        <div className="text-3xl font-semibold text-lightblue-200">
-          Поединки
+        <div className="flex items-center gap-x-8">
+          <div className="text-3xl font-semibold text-lightblue-200">
+            Поединки
+          </div>
+          <div className="flex gap-x-2">
+            <ActionButton
+              className="py-[4px] text-sm font-medium text-gray-600"
+              onClick={() => openMatchesTable(!matchesTable)}
+            >
+              Список поединков
+            </ActionButton>
+            <ActionButton
+              className="py-[4px] text-sm font-medium text-gray-600"
+              onClick={() => {}}
+            >
+              Протоколы
+            </ActionButton>
+            <ActionButton
+              className="py-[4px] text-sm font-medium text-gray-600"
+              onClick={() => openCategoriesTable(!categoriesTable)}
+            >
+              Категории
+            </ActionButton>
+          </div>
         </div>
         <div>
           <ActionButton
@@ -63,12 +90,12 @@ const AutomaticSystem = ({ tournament, classes, competitors }: Props) => {
           </ActionButton>
         </div>
       </div>
-      <div>
-        <div className="flex flex-wrap">
+      <div className="w-full">
+        <div className="flex w-full flex-wrap">
           {matches &&
             tablesCount.map((item, index) => (
               <AutomaticMatchTable
-                competitors={competitors}
+                competitors={competitors.filter((item) => item.confirm)}
                 name={item}
                 addMatch={addMatch}
                 key={index}
@@ -82,6 +109,22 @@ const AutomaticSystem = ({ tournament, classes, competitors }: Props) => {
             ))}
         </div>
       </div>
+      {matches && classes && (
+        <MatchesTable
+          hidden={!matchesTable}
+          closeFunc={() => openMatchesTable(false)}
+          tournament={tournament}
+          weightClasses={classes}
+          matches={matches}
+        />
+      )}
+      {classes && (
+        <CategoriesTable
+          hidden={!categoriesTable}
+          classes={classes}
+          closeFunc={() => openCategoriesTable(false)}
+        />
+      )}
     </div>
   )
 }

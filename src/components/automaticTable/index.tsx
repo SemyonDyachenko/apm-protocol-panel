@@ -4,7 +4,11 @@ import { Dispatch, useEffect, useState } from "react"
 import MatchItem from "@/components/matchItem"
 import WeightClass, { TournamentWeightClass } from "@/models/WeightClass"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons"
+import {
+  faCaretDown,
+  faCaretUp,
+  faPlay,
+} from "@fortawesome/free-solid-svg-icons"
 import CustomSelect from "@/components/UI/CustomSelect"
 import { motion } from "framer-motion"
 import { getRoundStatus, tournamentCategories } from "@/utils/string"
@@ -14,6 +18,7 @@ import Competitor from "@/models/Competitor"
 import { useAppDispatch } from "@/hooks/redux"
 import { removeMatchesFromCategory } from "@/store/actions/matchAction"
 import registration from "@/pages/editCompetitor/registration"
+import { completeTournamentWeightClass } from "@/store/actions/tournamentAction"
 
 type Props = {
   competitors: TournamentRegistration[]
@@ -76,6 +81,10 @@ const AutomaticMatchTable = ({
 
   const [finishedCategories, setFinishedCategories] = useState(new Set())
   const [acceptLosers, setAcceptLosers] = useState(false)
+
+  const finishCategory = (id: number) => {
+    dispatch(completeTournamentWeightClass(id, true, selectedHand))
+  }
 
   const addFinishedCategory = (item: number) => {
     setFinishedCategories(new Set(finishedCategories).add(item))
@@ -269,6 +278,16 @@ const AutomaticMatchTable = ({
       setLosers(newLosers)
     }
 
+    if (newLosers.length === 0 && newWinners.length === 1) {
+      let _class = classes.find(
+        (item) =>
+          item.weight_class.id == selectedWeightClass &&
+          item.category == selectedCategory &&
+          item.tournament == tournament.id
+      )
+      if (_class) finishCategory(_class.id)
+    }
+
     setCurrentRound((current) => current + 1)
 
     refreshMatches()
@@ -342,39 +361,42 @@ const AutomaticMatchTable = ({
   }, [filteredMatches, currentRound])
 
   return (
-    <div className="mt-4 w-1/2 px-2">
+    <div className="mt-4 w-full px-2">
       <div>
         <div className="flex items-center justify-between pr-4">
           <div className="flex items-center gap-4">
-            <div className="text-md my-1 font-medium text-gray-400">
+            <div className="my-1 text-xl font-semibold  uppercase text-green-500">
               {roundType.length > 0
                 ? getRoundStatus(roundType)
                 : `Раунд ${currentRound}`}
             </div>
             <div
               onClick={() => setParamsOpened(!paramsOpened)}
-              className="flex cursor-pointer items-center gap-2 text-sm text-lightblue-200 underline transition  hover:text-secondary-500"
+              className="text-md flex cursor-pointer items-center gap-2 text-lightblue-200 underline transition  hover:text-secondary-500"
             >
               <span>Параметры</span>
               <FontAwesomeIcon icon={faCaretDown} />
             </div>
             <div
               onClick={() => setHistory(!history)}
-              className="flex cursor-pointer items-center gap-2 text-sm text-lightblue-200 underline transition  hover:text-secondary-500"
+              className="text-md flex cursor-pointer items-center gap-2 text-lightblue-200 underline transition  hover:text-secondary-500"
             >
               История
             </div>
             <div
               onClick={startCategory}
-              className="flex cursor-pointer items-center gap-2 text-sm text-secondary-500  transition  hover:text-secondary-300"
+              className="flex h-[30px] w-[30px] cursor-pointer items-center justify-center gap-2 rounded-lg bg-secondary-500 text-sm text-secondary-500  transition  hover:text-secondary-300"
             >
-              Запустить
+              <FontAwesomeIcon className="text-white " icon={faPlay} />
             </div>
             <div
               onClick={clearCategoryRounds}
-              className="flex cursor-pointer items-center gap-2 text-sm text-primary-500  transition  hover:text-primary-300"
+              className="flex cursor-pointer items-center gap-2 text-sm text-primary-500 underline  transition  hover:text-primary-300"
             >
               Сбросить
+            </div>
+            <div className="flex cursor-pointer items-center gap-2 text-sm text-secondary-500 underline  transition  hover:text-primary-300">
+              Сетка поединков
             </div>
           </div>
           <div className="cursor-pointer text-sm text-primary-200 underline transition hover:text-primary-500">
@@ -400,7 +422,22 @@ const AutomaticMatchTable = ({
           >
             <option value={-1}>Нет</option>
             {classes
+
               .filter((item) => item.category === selectedCategory)
+              .filter((item) =>
+                selectedHand == "left"
+                  ? !item.completed_left
+                  : !item.completed_right
+              )
+              .filter(
+                (item_category) =>
+                  competitors.filter(
+                    (item) =>
+                      item.category == selectedCategory &&
+                      item.hand == selectedHand &&
+                      item.weight_class.id == item_category.weight_class.id
+                  ).length !== 0
+              )
               .map((item, index) => (
                 <option key={index} value={item.weight_class.id}>
                   {item.weight_class.name} Кг
@@ -428,16 +465,26 @@ const AutomaticMatchTable = ({
             !history && "hidden"
           }`}
         >
-          {filteredMatches
-            ?.filter((item) => item.winner)
-            .map((item, index) => (
-              <MatchItem
-                key={index}
-                refreshWinner={refreshMatches}
-                match={item}
-                refreshMatches={refreshMatches}
-                tournament={tournament}
-              />
+          {currentRound > 0 &&
+            new Array(currentRound).fill(0, 1, currentRound).map((_, index) => (
+              <div>
+                <div className="text-secondary-500 underline">
+                  Раунд {index}:
+                </div>
+                {filteredMatches
+                  ?.filter((item) => item.winner)
+                  .filter((item) => item.round == index)
+                  .map((item, index) => (
+                    <MatchItem
+                      deleteButton={false}
+                      key={index}
+                      refreshWinner={refreshMatches}
+                      match={item}
+                      refreshMatches={refreshMatches}
+                      tournament={tournament}
+                    />
+                  ))}
+              </div>
             ))}
         </div>
         <div
@@ -451,6 +498,7 @@ const AutomaticMatchTable = ({
           .map((item, index) => (
             <div>
               <MatchItem
+                deleteButton={false}
                 key={index}
                 minimize={index !== 0}
                 refreshWinner={refreshMatches}
@@ -459,8 +507,8 @@ const AutomaticMatchTable = ({
                 tournament={tournament}
               />
               {index === 0 && (
-                <div className="w-full text-center text-sm font-medium text-secondary-500">
-                  Next
+                <div className="text-md w-full text-center font-medium text-secondary-500">
+                  Следующий поединок
                 </div>
               )}
             </div>

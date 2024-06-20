@@ -56,7 +56,6 @@ const CompetitorsPage = (props: Props) => {
           <div>Пол</div>
           <div>Город</div>
           <div>Дата рождения</div>
-          <div>Вес</div>
           <div>Роль</div>
           <div>Рейтинг</div>
         </div>

@@ -18,24 +18,22 @@ const CompetitorsNode = ({ competitor }: Props) => {
       <div
         className={`competitors-center my-2 flex w-full cursor-pointer justify-between px-4 py-4 transition hover:rounded-lg hover:bg-gray-80 `}
       >
-        <div className="w-1/3 font-medium text-gray-600">
+        <div className="w-[30%] font-medium text-gray-600">
           {getCompetitorFullname(competitor)}
         </div>
-        <div className=" w-1/6 text-sm text-gray-400">
+        <div className="w-1/5 text-sm text-gray-400">
           {getCompetitorGender(competitor)}
         </div>
-        <div className="w-1/6 pl-5 text-sm text-gray-400">
+        <div className="w-1/5  text-sm text-gray-400">
           {competitor.city?.valueOf() || "Не указан"}
         </div>
-        <div className="w-1/6 pl-5 text-sm text-gray-400">
+        <div className="w-1/5  text-sm text-gray-400">
           {competitor.birthdate
             ? getNormalizeDate(competitor.birthdate.toString())
             : "Не указана"}
         </div>
-        <div className="w-1/5  text-sm text-gray-400">
-          {competitor.weight !== 0 ? competitor.weight + " Кг" : "Не указан"}
-        </div>
-        <div className=" w-1/12 text-sm text-gray-400">
+
+        <div className=" w-1/6 text-sm text-gray-400">
           {getRoleString(competitor.mode)}
         </div>
         <div className="w-1/12 pl-10 text-end text-sm text-secondary-500">

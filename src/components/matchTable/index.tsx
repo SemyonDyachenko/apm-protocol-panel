@@ -47,7 +47,7 @@ const MatchTable = ({
   }, [matches, selectedWeightClass, selectedHand, selectedCategory])
 
   return (
-    <div className="mt-4 w-1/2 px-2">
+    <div className="mt-4 w-full px-2">
       <div>
         <div className="flex items-center justify-between pr-4">
           <div className="flex items-center gap-4">
@@ -123,6 +123,7 @@ const MatchTable = ({
             ?.filter((item) => item.winner)
             .map((item, index) => (
               <MatchItem
+                deleteButton
                 key={index}
                 refreshMatches={refreshMatches}
                 refreshWinner={refreshMatches}
@@ -140,6 +141,7 @@ const MatchTable = ({
           ?.filter((item) => !item.winner)
           .map((item, index) => (
             <MatchItem
+              deleteButton
               key={index}
               refreshMatches={refreshMatches}
               refreshWinner={refreshMatches}

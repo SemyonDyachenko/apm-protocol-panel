@@ -19,6 +19,7 @@ type Props = {
   className?: string
   onClick?: (winner: number, looser: number) => void
   minimize?: boolean
+  deleteButton: boolean
 }
 
 const MatchItem = ({
@@ -29,6 +30,7 @@ const MatchItem = ({
   refreshMatches,
   onClick,
   minimize,
+  deleteButton
 }: Props) => {
   const dispatch = useAppDispatch()
 
@@ -77,9 +79,10 @@ const MatchItem = ({
   return (
     <div
       className={`flex ${
-        minimize && "mx-auto w-[95%] opacity-[0.65]"
+        minimize && "mx-auto w-[95%] opacity-[0.75]"
       } items-center gap-x-3`}
     >
+      {deleteButton &&
       <div>
         <FontAwesomeIcon
           onClick={deleteMatch}
@@ -87,19 +90,22 @@ const MatchItem = ({
           icon={faTrash}
         />
       </div>
+      }
       <div
         className={`my-1 w-[95%] rounded-xl border-[0.1px] border-gray-200 bg-lightblue-100 shadow-sm ${className}`}
       >
         <div className="flex items-center justify-between gap-4">
           <div
-            onClick={() => defineWinner(match.first_competitor.id)}
+            onClick={() => {
+              !minimize && defineWinner(match.first_competitor.id)
+            }}
             className={`${
-              minimize ? "h-[75px]" : "h-[80px]"
+              minimize ? "h-[75px] cursor-default" : "h-[80px] "
             }  w-[48%] cursor-pointer rounded-xl ${
               match.winner === match.first_competitor.id
                 ? "bg-secondary-400"
                 : "bg-white"
-            } rounded-r-none  px-4 py-2 transition hover:bg-green-400`}
+            } rounded-r-none  px-4 py-2 transition  hover:bg-green-400`}
           >
             <div className="flex w-full items-center justify-between">
               <div className="h-full">
@@ -125,7 +131,7 @@ const MatchItem = ({
                   <img
                     className="h-[60px] w-[60px] rounded-full border-[0.5px] border-gray-200"
                     alt={"image.jpg"}
-                    src={match.first_competitor.image?.toString() || ""}
+                    src={match.first_competitor.image?.toString() || NonImage}
                   />
                 </div>
                 <div>
@@ -146,9 +152,11 @@ const MatchItem = ({
           </div>
           <div className="text-4xl font-black text-gray-600">VS</div>
           <div
-            onClick={() => defineWinner(match.second_competitor.id)}
+            onClick={() => {
+              !minimize && defineWinner(match.second_competitor.id)
+            }}
             className={`${
-              minimize ? "h-[75px]" : "h-[80px]"
+              minimize ? "h-[75px]  cursor-default" : "h-[80px]"
             }    w-[48%] cursor-pointer rounded-xl rounded-l-none ${
               match.winner === match.second_competitor.id
                 ? "bg-secondary-400"
@@ -161,7 +169,7 @@ const MatchItem = ({
                   <img
                     className="h-[60px] w-[60px] rounded-full border-[0.5px] border-gray-200"
                     alt={"image.jpg"}
-                    src={match.second_competitor.image?.toString() || ""}
+                    src={match.second_competitor.image?.toString() || NonImage}
                   />
                 </div>
                 <div>

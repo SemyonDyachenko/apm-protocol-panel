@@ -19,6 +19,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCamera, faImage } from "@fortawesome/free-solid-svg-icons"
 import { getTournamentEnded } from "@/models/Tournament"
 import TournamentStartPopup from "@/pages/tournament/startPopup"
+import { useAppSelector } from "@/hooks/redux"
 
 type Props = {}
 
@@ -55,12 +56,14 @@ const TournamentPage = (props: Props) => {
   const { data: league } = leagueAPI.useFetchLeagueQuery(
     tournament?.league || -1
   )
-  const { data: competitors } =
+  const { data: competitors, refetch } =
     tournamentAPI.useFetchTournamentRegistrationQuery(tournament?.id || -1)
 
   const [target, setTarget] = useState("competitors")
   const [adder, setAdder] = useState(false)
   const [startWindow, setStartWindow] = useState(false)
+
+  const { competitor } = useAppSelector((state) => state.competitors)
 
   const getWindow = () => {
     if (tournament) {
@@ -98,7 +101,7 @@ const TournamentPage = (props: Props) => {
   }
 
   if (isLoading) return <Loader />
-  if (tournament)
+  if (tournament && competitor && competitor.id === tournament.organizer)
     return (
       <div>
         <div className="w-full rounded-2xl bg-white px-10 py-5">
@@ -137,7 +140,6 @@ const TournamentPage = (props: Props) => {
             </div>
             <div>
               <ActionButton
-                disabled={getTournamentEnded(tournament)}
                 className="px-8 py-3 font-semibold text-gray-600 disabled:bg-gray-300"
                 onClick={() => {
                   if (!tournament.is_started) setStartWindow(true)
